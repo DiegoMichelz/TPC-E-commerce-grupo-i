@@ -1,0 +1,10 @@
+# Visual Studio directories and files
+.vs/
+bin/
+obj/
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+*.cache
+_sfx_
