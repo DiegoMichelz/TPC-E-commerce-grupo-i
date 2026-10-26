@@ -67,20 +67,36 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="MasterE-commerce.Master.cs">
+      <DependentUpon>MasterE-commerce.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MasterE-commerce.Master.designer.cs">
+      <DependentUpon>MasterE-commerce.Master</DependentUpon>
     </Compile>
     <Compile Include="Models\Articulo.cs" />
     <Compile Include="Models\Categoria.cs" />
     <Compile Include="Models\Marca.cs" />
-    <Compile Include="Negocio\Negocio.cs" />
+    <Compile Include="Negocio\AccesoDatos.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="MasterE-commerce.Master" />
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
