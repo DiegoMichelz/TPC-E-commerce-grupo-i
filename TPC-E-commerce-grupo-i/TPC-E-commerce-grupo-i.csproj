@@ -174,6 +174,9 @@
     <Compile Include="Negocio\AccesoDatos.cs" />
     <Compile Include="Negocio\ClienteNegocio.cs" />
     <Compile Include="Negocio\DireccionNegocio.cs" />
+    <Compile Include="Negocio\FormaEntregaNegocio.cs" />
+    <Compile Include="Negocio\FormaPagoNegocio.cs" />
+    <Compile Include="Negocio\PedidoNegocio.cs" />
     <Compile Include="obj\Debug\.NETFramework,Version=v4.8.1.AssemblyAttributes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
