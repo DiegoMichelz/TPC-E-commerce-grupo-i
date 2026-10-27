@@ -142,9 +142,11 @@
     <Compile Include="Models\Direccion.cs" />
     <Compile Include="Models\FormaEntrega.cs" />
     <Compile Include="Models\FormaPago.cs" />
+    <Compile Include="Models\HistorialEstadoPedido.cs" />
     <Compile Include="Models\ItemCarrito.cs" />
     <Compile Include="Models\ItemPedido.cs" />
     <Compile Include="Models\Marca.cs" />
+    <Compile Include="Models\Pedido.cs" />
     <Compile Include="Negocio\AccesoDatos.cs" />
     <Compile Include="Negocio\ClienteNegocio.cs" />
     <Compile Include="Negocio\DireccionNegocio.cs" />
