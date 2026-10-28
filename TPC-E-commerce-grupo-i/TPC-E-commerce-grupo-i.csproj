@@ -118,6 +118,7 @@
     <Content Include="obj\Debug\TPC-E-commerce-grupo-i.csproj.FileListAbsolute.txt" />
     <Content Include="obj\Debug\TPC-E-commerce-grupo-i.dll" />
     <Content Include="obj\Debug\TPC-E-commerce-grupo-i.pdb" />
+    <Content Include="Script-datos.sql" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>

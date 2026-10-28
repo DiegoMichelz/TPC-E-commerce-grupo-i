@@ -24,7 +24,7 @@
                             <li class="nav-item"><a class="nav-link" href="~/Default.aspx" runat="server">Inicio</a></li>
                             <li class="nav-item"><a class="nav-link" href="~/Default.aspx#catalogo-seccion" runat="server">Catálogo</a></li>
                             <li class="nav-item"><a class="nav-link" href="~/Carrito.aspx" runat="server">Carrito</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#" runat="server">Administración</a></li>
+                            <li class="nav-item"><a class="nav-link" href="~/Administracion.aspx" runat="server">Administración</a></li>
                         </ul>
                     </div>
                 </div>
