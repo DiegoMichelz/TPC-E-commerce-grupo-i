@@ -19,7 +19,7 @@ namespace TPC_E_commerce_grupo_i.Negocio
 
         public AccesoDatos()
         {
-            conexion = new SqlConnection("server=.\\SQLEXPRESS; database=TU_BASE_DE_DATOS; integrated security=true");
+            conexion = new SqlConnection("server=.\\SQLEXPRESS; database=ECommerceDB; integrated security=true");
             comando = new SqlCommand();
         }
 
