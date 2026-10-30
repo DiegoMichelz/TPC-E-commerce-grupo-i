@@ -185,6 +185,7 @@
     <Compile Include="Negocio\DireccionNegocio.cs" />
     <Compile Include="Negocio\FormaEntregaNegocio.cs" />
     <Compile Include="Negocio\FormaPagoNegocio.cs" />
+    <Compile Include="Negocio\ArticuloNegocio.cs" />
     <Compile Include="Negocio\PedidoNegocio.cs" />
     <Compile Include="obj\Debug\.NETFramework,Version=v4.8.1.AssemblyAttributes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

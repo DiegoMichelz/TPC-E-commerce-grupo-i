@@ -6,7 +6,6 @@
     <!-- Franja de Envío Gratis Superior -->
     <div class="bg-primary text-white py-1 px-3 text-center small mb-3">
         <i class="bi bi-truck me-1"></i>Envíos gratis a partir de $50.000 | ¡Hasta 12 cuotas sin interés y garantía oficial garantizada!
-   
     </div>
 
     <div class="container py-3">
@@ -191,9 +190,12 @@
             <!-- Grilla Principal de Productos (Columna 9) -->
             <section class="col-lg-9">
 
-                <!-- Barra superior de ordenamiento -->
+                <!-- Barra superior de ordenamiento con conteo dinámico -->
                 <div class="bg-white p-3 rounded border shadow-sm mb-3 d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
-                    <span class="text-muted small"><i class="bi bi-grid text-secondary me-1"></i>Mostrando <strong>8</strong> de <strong>86</strong> productos</span>
+                    <span class="text-muted small">
+                        <i class="bi bi-grid text-secondary me-1"></i>
+                        Mostrando <strong><%: ListaArticulos != null ? ListaArticulos.Count : 0 %></strong> productos
+                    </span>
                     <div class="d-flex align-items-center gap-2 w-100 w-sm-auto">
                         <label class="small text-muted text-nowrap">Ordenar por:</label>
                         <select class="form-select form-select-sm">
@@ -204,117 +206,34 @@
                     </div>
                 </div>
 
-                <!-- Grilla de Tarjetas -->
+                <!-- Grilla Dinámica con Repeater para reemplazar las tarjetas estáticas -->
                 <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
+                    <asp:Repeater ID="repArticulos" runat="server">
+                        <ItemTemplate>
+                            <div class="col">
+                                <div class="card h-100 shadow-sm border-0 position-relative">
+                                    <span class="position-absolute top-0 start-0 m-2 badge bg-primary">Disponible</span>
+                                    
+                                    <img src='<%# string.IsNullOrEmpty(Eval("ImagenUrl") as string) ? "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80" : Eval("ImagenUrl") %>' 
+                                         class="card-img-top bg-light object-fit-cover" 
+                                         style="height: 180px;" 
+                                         alt='<%# Eval("Nombre") %>' />
 
-                    <!-- Producto 1 -->
-                    <div class="col">
-                        <div class="card h-100 shadow-sm border-0 position-relative">
-                            <span class="position-absolute top-0 start-0 m-2 badge bg-primary">Envío Gratis</span>
-                            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80" class="card-img-top bg-light object-fit-cover" style="height: 180px;" alt="...">
-                            <div class="card-body d-flex flex-column">
-                                <small class="text-muted text-uppercase" style="font-size: 10px;">Audio & Gadgets</small>
-                                <h6 class="card-title fw-bold text-dark mt-1 text-truncate">Auriculares Inalámbricos Noise Cancelling</h6>
-                                <p class="card-text text-muted small flex-grow-1" style="font-size: 12px;">Cancelación activa de ruido y 40hs de batería.</p>
-                                <div class="mb-2">
-                                    <small class="text-muted d-block" style="font-size: 11px;">6 cuotas fijas</small>
-                                    <span class="fs-5 fw-bold text-primary">$58.900</span>
+                                    <div class="card-body d-flex flex-column">
+                                        <small class="text-muted text-uppercase" style="font-size: 10px;"><%# Eval("Codigo") %></small>
+                                        <h6 class="card-title fw-bold text-dark mt-1 text-truncate"><%# Eval("Nombre") %></h6>
+                                        <p class="card-text text-muted small flex-grow-1" style="font-size: 12px;"><%# Eval("Descripcion") %></p>
+                                        <div class="mb-2">
+                                            <span class="fs-5 fw-bold text-primary">$<%# string.Format("{0:N2}", Eval("Precio")) %></span>
+                                        </div>
+                                        <a href='Detalle.aspx?id=<%# Eval("Id") %>' class="btn btn-outline-primary btn-sm w-100">
+                                            <i class="bi bi-eye"></i> Ver detalle
+                                        </a>
+                                    </div>
                                 </div>
-                                <a href="#" class="btn btn-outline-primary btn-sm w-100"><i class="bi bi-eye"></i>Ver detalle</a>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- Producto 2 -->
-                    <div class="col">
-                        <div class="card h-100 shadow-sm border-0 position-relative">
-                            <span class="position-absolute top-0 start-0 m-2 badge bg-warning text-dark">12 Cuotas</span>
-                            <img src="https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?auto=format&fit=crop&w=500&q=80" class="card-img-top bg-light object-fit-cover" style="height: 180px;" alt="...">
-                            <div class="card-body d-flex flex-column">
-                                <small class="text-muted text-uppercase" style="font-size: 10px;">Pequeños Electro</small>
-                                <h6 class="card-title fw-bold text-dark mt-1 text-truncate">Cafetera Espresso Automática</h6>
-                                <p class="card-text text-muted small flex-grow-1" style="font-size: 12px;">Bomba italiana de 20 bares y espumador profesional.</p>
-                                <div class="mb-2">
-                                    <small class="text-muted d-block" style="font-size: 11px;">12 cuotas fijas</small>
-                                    <span class="fs-5 fw-bold text-primary">$124.000</span>
-                                </div>
-                                <a href="#" class="btn btn-outline-primary btn-sm w-100"><i class="bi bi-eye"></i>Ver detalle</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Producto 3 -->
-                    <div class="col">
-                        <div class="card h-100 shadow-sm border-0 position-relative">
-                            <span class="position-absolute top-0 start-0 m-2 badge bg-danger">-15% OFF</span>
-                            <img src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=500&q=80" class="card-img-top bg-light object-fit-cover" style="height: 180px;" alt="...">
-                            <div class="card-body d-flex flex-column">
-                                <small class="text-muted text-uppercase" style="font-size: 10px;">Electro & Cocina</small>
-                                <h6 class="card-title fw-bold text-dark mt-1 text-truncate">Freidora de Aire Digital 4.5L</h6>
-                                <p class="card-text text-muted small flex-grow-1" style="font-size: 12px;">Cocción 360° y 8 programas preconfigurados.</p>
-                                <div class="mb-2">
-                                    <small class="text-muted d-block" style="font-size: 11px;">6 cuotas fijas</small>
-                                    <span class="fs-5 fw-bold text-primary">$89.500</span>
-                                </div>
-                                <a href="#" class="btn btn-outline-primary btn-sm w-100"><i class="bi bi-eye"></i>Ver detalle</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Producto 4 -->
-                    <div class="col">
-                        <div class="card h-100 shadow-sm border-0 position-relative">
-                            <span class="position-absolute top-0 start-0 m-2 badge bg-success">Más Vendido</span>
-                            <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=500&q=80" class="card-img-top bg-light object-fit-cover" style="height: 180px;" alt="...">
-                            <div class="card-body d-flex flex-column">
-                                <small class="text-muted text-uppercase" style="font-size: 10px;">Gadgets & Smart</small>
-                                <h6 class="card-title fw-bold text-dark mt-1 text-truncate">Smartwatch Deportivo AMOLED</h6>
-                                <p class="card-text text-muted small flex-grow-1" style="font-size: 12px;">Monitor cardíaco, SpO2 y GPS integrado.</p>
-                                <div class="mb-2">
-                                    <small class="text-muted d-block" style="font-size: 11px;">6 cuotas fijas</small>
-                                    <span class="fs-5 fw-bold text-primary">$45.000</span>
-                                </div>
-                                <a href="#" class="btn btn-outline-primary btn-sm w-100"><i class="bi bi-eye"></i>Ver detalle</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Producto 5 -->
-                    <div class="col">
-                        <div class="card h-100 shadow-sm border-0 position-relative">
-                            <span class="position-absolute top-0 start-0 m-2 badge bg-secondary">Wireless</span>
-                            <img src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=500&q=80" class="card-img-top bg-light object-fit-cover" style="height: 180px;" alt="...">
-                            <div class="card-body d-flex flex-column">
-                                <small class="text-muted text-uppercase" style="font-size: 10px;">Informática & Gaming</small>
-                                <h6 class="card-title fw-bold text-dark mt-1 text-truncate">Teclado Mecánico RGB Compacto</h6>
-                                <p class="card-text text-muted small flex-grow-1" style="font-size: 12px;">Switches Hot-Swap y Bluetooth 5.0.</p>
-                                <div class="mb-2">
-                                    <small class="text-muted d-block" style="font-size: 11px;">6 cuotas fijas</small>
-                                    <span class="fs-5 fw-bold text-primary">$38.200</span>
-                                </div>
-                                <a href="#" class="btn btn-outline-primary btn-sm w-100"><i class="bi bi-eye"></i>Ver detalle</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Producto 6 -->
-                    <div class="col">
-                        <div class="card h-100 shadow-sm border-0 position-relative">
-                            <span class="position-absolute top-0 start-0 m-2 badge bg-info text-dark">IPX7 Resist</span>
-                            <img src="https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?auto=format&fit=crop&w=500&q=80" class="card-img-top bg-light object-fit-cover" style="height: 180px;" alt="...">
-                            <div class="card-body d-flex flex-column">
-                                <small class="text-muted text-uppercase" style="font-size: 10px;">Audio Portátil</small>
-                                <h6 class="card-title fw-bold text-dark mt-1 text-truncate">Parlante Portátil Bluetooth IPX7</h6>
-                                <p class="card-text text-muted small flex-grow-1" style="font-size: 12px;">Sonido envolvente 360° y 18hs de batería.</p>
-                                <div class="mb-2">
-                                    <small class="text-muted d-block" style="font-size: 11px;">6 cuotas fijas</small>
-                                    <span class="fs-5 fw-bold text-primary">$32.900</span>
-                                </div>
-                                <a href="#" class="btn btn-outline-primary btn-sm w-100"><i class="bi bi-eye"></i>Ver detalle</a>
-                            </div>
-                        </div>
-                    </div>
-
+                        </ItemTemplate>
+                    </asp:Repeater>
                 </div>
 
             </section>
