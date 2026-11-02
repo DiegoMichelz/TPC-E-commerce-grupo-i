@@ -25,10 +25,11 @@ namespace TPC_E_commerce_grupo_i.Negocio
                     aux.Nombre = (string)datos.Lector["Nombre"];
                     aux.Descripcion = (string)datos.Lector["Descripcion"];
                     aux.Precio = (decimal)datos.Lector["Precio"];
-
+                    aux.ImagenesUrl = new List<string>();
                     if (!(datos.Lector["ImagenUrl"] is DBNull))
-                        aux.ImagenUrl = (string)datos.Lector["ImagenUrl"];
-
+                    {
+                        aux.ImagenesUrl.Add((string)datos.Lector["ImagenUrl"]);
+                    }
                     lista.Add(aux);
                 }
 

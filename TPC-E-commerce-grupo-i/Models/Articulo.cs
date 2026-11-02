@@ -12,8 +12,17 @@ namespace TPC_E_commerce_grupo_i.Models
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
         public Marca Marca { get; set; }          
-        public Categoria Categoria { get; set; }  
-        public string ImagenUrl { get; set; }
+        public Categoria Categoria { get; set; }
+        public List<string> ImagenesUrl { get; set; } = new List<string>();
         public decimal Precio { get; set; }
+        public string ImagenPrincipal
+        {
+            get
+            {
+                if (ImagenesUrl != null && ImagenesUrl.Count > 0)
+                    return ImagenesUrl[0];
+                return "https://via.placeholder.com/300";
+            }
+        }
     }
 }

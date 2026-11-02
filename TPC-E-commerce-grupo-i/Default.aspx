@@ -214,10 +214,10 @@
                                 <div class="card h-100 shadow-sm border-0 position-relative">
                                     <span class="position-absolute top-0 start-0 m-2 badge bg-primary">Disponible</span>
                                     
-                                    <img src='<%# string.IsNullOrEmpty(Eval("ImagenUrl") as string) ? "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80" : Eval("ImagenUrl") %>' 
-                                         class="card-img-top bg-light object-fit-cover" 
-                                         style="height: 180px;" 
-                                         alt='<%# Eval("Nombre") %>' />
+                                   <img src='<%# Eval("ImagenPrincipal") ?? "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80" %>' 
+                                       class="card-img-top bg-light object-fit-cover"
+                                       style="height: 180px;"
+                                       alt='<%# Eval("Nombre") %>' />
 
                                     <div class="card-body d-flex flex-column">
                                         <small class="text-muted text-uppercase" style="font-size: 10px;"><%# Eval("Codigo") %></small>

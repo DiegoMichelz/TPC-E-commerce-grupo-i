@@ -7,7 +7,6 @@ namespace TPC_E_commerce_grupo_i.Models
 {
     public class ItemPedido
     {
-        public int Id { get; set; }
         public int IdPedido { get; set; }
         public Articulo Producto { get; set; }
         public int Cantidad { get; set; }
