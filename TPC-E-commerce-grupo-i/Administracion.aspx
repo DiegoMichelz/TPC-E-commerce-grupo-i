@@ -7,8 +7,7 @@
         <div class="row">
             <div class="col-12 d-flex justify-content-between align-items-center mb-3">
                 <h2>Panel de Administración de Artículos</h2>
-                <!-- Botón para cuando armen el alta de productos -->
-                <a href="#" class="btn btn-primary">Agregar Nuevo Artículo</a>
+                <asp:Button ID="btnAgregar" runat="server" Text="Agregar Nuevo Artículo" CssClass="btn btn-primary" OnClick="btnAgregar_Click" />
             </div>
         </div>
 
@@ -16,31 +15,20 @@
             <div class="col-12">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <!-- Tabla vacía de ejemplo con Bootstrap -->
-                        <table class="table table-striped table-hover">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Código</th>
-                                    <th>Nombre</th>
-                                    <th>Precio</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Fila de ejemplo estática para que no quede vacío -->
-                                <tr>
-                                    <td>1</td>
-                                    <td>ART001</td>
-                                    <td>Auriculares Inalámbricos</td>
-                                    <td>$35,000.00</td>
-                                    <td>
-                                        <a href="#" class="btn btn-sm btn-warning">Modificar</a>
-                                        <a href="#" class="btn btn-sm btn-danger">Eliminar</a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <!-- Grilla dinámica de ASP.NET -->
+                        <asp:GridView ID="dgvArticulos" runat="server" CssClass="table table-striped table-hover" AutoGenerateColumns="false"
+                            DataKeyNames="Id" OnSelectedIndexChanged="dgvArticulos_SelectedIndexChanged" OnPageIndexChanging="dgvArticulos_PageIndexChanging" AllowPaging="true" PageSize="5">
+                            <Columns>
+                                <asp:BoundField HeaderText="ID" DataField="Id" />
+                                <asp:BoundField HeaderText="Código" DataField="Codigo" />
+                                <asp:BoundField HeaderText="Nombre" DataField="Nombre" />
+                                <asp:BoundField HeaderText="Precio" DataField="Precio" DataFormatString="{0:C}" />
+                                <asp:BoundField HeaderText="Marca" DataField="Marca.Descripcion" />
+                                <asp:BoundField HeaderText="Categoría" DataField="Categoria.Descripcion" />
+
+                                <asp:CommandField ShowSelectButton="true" SelectText="✏️ Modificar" ControlStyle-CssClass="btn btn-sm btn-warning" />
+                            </Columns>
+                        </asp:GridView>
                     </div>
                 </div>
             </div>
