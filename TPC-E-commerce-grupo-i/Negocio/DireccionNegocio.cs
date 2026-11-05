@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using global::TPC_E_commerce_grupo_i.Models;
+using TPC_E_commerce_grupo_i.Models;
 
 namespace TPC_E_commerce_grupo_i.Negocio
 {
@@ -14,7 +14,7 @@ namespace TPC_E_commerce_grupo_i.Negocio
 
             try
             {
-                datos.setConsulta("SELECT Id, IdCliente, Calle, Numero, Piso, Departamento, CodigoPostal, Localidad, Provincia, Alias, EsPredeterminada, Activo FROM Direcciones WHERE IdCliente = @idCliente AND Activo = 1");
+                datos.setConsulta("SELECT Id, Calle, Numero, Piso, Departamento, CodigoPostal, Localidad, Provincia, Alias, EsPredeterminada, Activo FROM Direcciones WHERE IdCliente = @idCliente AND Activo = 1");
                 datos.setParametro("@idCliente", idCliente);
                 datos.ejecutarLectura();
 
@@ -22,7 +22,7 @@ namespace TPC_E_commerce_grupo_i.Negocio
                 {
                     Direccion aux = new Direccion();
                     aux.Id = (int)datos.Lector["Id"];
-                    aux.IdCliente = (int)datos.Lector["IdCliente"];
+                    // aux.IdCliente se omitió en C# por composición en el modelo de dominio
                     aux.Calle = (string)datos.Lector["Calle"];
                     aux.Numero = (string)datos.Lector["Numero"];
 
@@ -65,7 +65,7 @@ namespace TPC_E_commerce_grupo_i.Negocio
 
             try
             {
-                datos.setConsulta("SELECT Id, IdCliente, Calle, Numero, Piso, Departamento, CodigoPostal, Localidad, Provincia, Alias, EsPredeterminada, Activo FROM Direcciones WHERE Id = @id AND Activo = 1");
+                datos.setConsulta("SELECT Id, Calle, Numero, Piso, Departamento, CodigoPostal, Localidad, Provincia, Alias, EsPredeterminada, Activo FROM Direcciones WHERE Id = @id AND Activo = 1");
                 datos.setParametro("@id", id);
                 datos.ejecutarLectura();
 
@@ -73,7 +73,7 @@ namespace TPC_E_commerce_grupo_i.Negocio
                 {
                     direccion = new Direccion();
                     direccion.Id = (int)datos.Lector["Id"];
-                    direccion.IdCliente = (int)datos.Lector["IdCliente"];
+                    // direccion.IdCliente se omitió en C# por composición en el modelo de dominio
                     direccion.Calle = (string)datos.Lector["Calle"];
                     direccion.Numero = (string)datos.Lector["Numero"];
 
@@ -106,8 +106,8 @@ namespace TPC_E_commerce_grupo_i.Negocio
             }
         }
 
-        // 3. Agregar una nueva dirección
-        public void Agregar(Direccion nueva)
+        // 3. Agregar una nueva dirección recibiendo el idCliente de forma explícita
+        public void Agregar(Direccion nueva, int idCliente)
         {
             AccesoDatos datos = new AccesoDatos();
 
@@ -115,7 +115,7 @@ namespace TPC_E_commerce_grupo_i.Negocio
             {
                 datos.setConsulta("INSERT INTO Direcciones (IdCliente, Calle, Numero, Piso, Departamento, CodigoPostal, Localidad, Provincia, Alias, EsPredeterminada, Activo) VALUES (@idCliente, @calle, @numero, @piso, @depto, @cp, @localidad, @provincia, @alias, @predeterminada, 1)");
 
-                datos.setParametro("@idCliente", nueva.IdCliente);
+                datos.setParametro("@idCliente", idCliente);
                 datos.setParametro("@calle", nueva.Calle);
                 datos.setParametro("@numero", nueva.Numero);
                 datos.setParametro("@piso", (object)nueva.Piso ?? DBNull.Value);
