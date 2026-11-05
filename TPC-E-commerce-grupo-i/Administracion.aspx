@@ -23,8 +23,16 @@
                                 <asp:BoundField HeaderText="Código" DataField="Codigo" />
                                 <asp:BoundField HeaderText="Nombre" DataField="Nombre" />
                                 <asp:BoundField HeaderText="Precio" DataField="Precio" DataFormatString="{0:C}" />
-                                <asp:BoundField HeaderText="Marca" DataField="Marca.Descripcion" />
-                                <asp:BoundField HeaderText="Categoría" DataField="Categoria.Descripcion" />
+                                <asp:TemplateField HeaderText="Marca">
+                                    <ItemTemplate>
+                                        <%# Eval("Marca") != null ? Eval("Marca.Descripcion") : "Sin Marca" %>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:TemplateField HeaderText="Categoría">
+                                    <ItemTemplate>
+                                        <%# Eval("Categoria") != null ? Eval("Categoria.Descripcion") : "Sin Categoría" %>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
 
                                 <asp:CommandField ShowSelectButton="true" SelectText="✏️ Modificar" ControlStyle-CssClass="btn btn-sm btn-warning" />
                             </Columns>

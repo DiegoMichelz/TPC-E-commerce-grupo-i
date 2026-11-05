@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using TPC_E_commerce_grupo_i.Negocio;
 using TPC_E_commerce_grupo_i.Models;
 using TPC_E_commerce_grupo_i.Negocio;
 
@@ -25,7 +22,12 @@ namespace TPC_E_commerce_grupo_i
             ArticuloNegocio negocio = new ArticuloNegocio();
             try
             {
-                dgvArticulos.DataSource = negocio.Listar();
+                List<Articulo> lista = negocio.Listar();
+
+                // Guardamos en Session para la administración
+                Session["listaArticulosAdmin"] = lista;
+
+                dgvArticulos.DataSource = lista;
                 dgvArticulos.DataBind();
             }
             catch (Exception ex)
@@ -37,8 +39,11 @@ namespace TPC_E_commerce_grupo_i
 
         protected void dgvArticulos_SelectedIndexChanged(object sender, EventArgs e)
         {
-            string id = dgvArticulos.SelectedDataKey.Value.ToString();
-            Response.Redirect("FormularioArticulo.aspx?id=" + id, false);
+            if (dgvArticulos.SelectedDataKey != null)
+            {
+                string id = dgvArticulos.SelectedDataKey.Value.ToString();
+                Response.Redirect("FormularioArticulo.aspx?id=" + id, false);
+            }
         }
 
         protected void btnAgregar_Click(object sender, EventArgs e)
@@ -52,4 +57,4 @@ namespace TPC_E_commerce_grupo_i
             CargarGrilla();
         }
     }
-}   
+}
