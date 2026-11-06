@@ -1,5 +1,8 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterE-commerce.Master" AutoEventWireup="true" CodeBehind="Detalle.aspx.cs" Inherits="TPC_E_commerce_grupo_i.Detalle" %>
-<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server"></asp:Content>
+﻿<%@ Page Title="Detalle del Producto" Language="C#" MasterPageFile="~/MasterE-commerce.Master" AutoEventWireup="true" CodeBehind="Detalle.aspx.cs" Inherits="TPC_E_commerce_grupo_i.Detalle" %>
+
+<asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
+</asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="container py-4">
 
@@ -8,15 +11,14 @@
             <ol class="breadcrumb bg-light p-2 rounded small shadow-sm">
                 <li class="breadcrumb-item"><a href="Default.aspx" class="text-decoration-none">Inicio</a></li>
                 <li class="breadcrumb-item"><a href="Default.aspx#catalogo-seccion" class="text-decoration-none">Catálogo</a></li>
-                <li class="breadcrumb-item"><a href="#" class="text-decoration-none">Audio & Gadgets</a></li>
                 <li class="breadcrumb-item active text-primary fw-semibold" aria-current="page">Detalle de Producto</li>
             </ol>
         </nav>
 
-        <!-- Sección Principal del Producto (Fila que contiene AMBAS columnas) -->
+        <!-- Sección Principal del Producto -->
         <div class="row g-4 bg-white p-4 p-md-5 rounded-3 border shadow-sm mb-5">
 
-            <!-- Columna Izquierda: Imagen del Producto -->
+            <!-- Columna Izquierda: Galería de Imágenes -->
             <div class="col-lg-6">
                 <div class="position-relative bg-light rounded-3 overflow-hidden border mb-3 text-center p-3">
                     <span class="position-absolute top-0 start-0 m-3 badge bg-primary">Envío Gratis</span>
@@ -37,7 +39,7 @@
                 </div>
             </div>
 
-            <!-- Columna Derecha: Información y Compra (AHORA SÍ DENTRO DE LA FILA) -->
+            <!-- Columna Derecha: Información y Compra -->
             <div class="col-lg-6 d-flex flex-column justify-content-between">
                 <div>
                     <div class="d-flex align-items-center justify-content-between mb-2">
@@ -69,11 +71,11 @@
                         <div class="d-flex align-items-baseline gap-3">
                             <span class="fs-2 fw-bold text-primary">$<asp:Label ID="lblPrecio" runat="server" />
                             </span>
-                            <span class="text-success small fw-semibold"><i class="bi bi-arrow-down-circle"></i>10% OFF pagando con transferencia</span>
+                            <span class="text-success small fw-semibold"><i class="bi bi-arrow-down-circle"></i> 10% OFF con transferencia</span>
                         </div>
                         <hr class="my-2">
                         <div class="small text-muted">
-                            <i class="bi bi-credit-card text-primary me-1"></i>Hasta <strong>6 cuotas fijas</strong> de $11.500 sin interés con tarjetas bancarias seleccionadas.
+                            <i class="bi bi-credit-card text-primary me-1"></i>Hasta <strong>6 cuotas fijas</strong> sin interés.
                         </div>
                     </div>
 
@@ -83,12 +85,12 @@
                     </p>
                 </div>
 
-                <!-- Botones de Acción -->
+                <!-- Botones de Acción con Control Servidor ASP.NET -->
                 <div>
                     <div class="d-grid gap-2 mb-3">
-                        <button type="button" class="btn btn-primary btn-lg py-3 fw-bold shadow-sm">
-                            <i class="bi bi-cart-plus me-2"></i>Agregar al Carrito
-                        </button>
+                        <asp:Button ID="btnAgregarCarrito" runat="server" Text="🛒 Agregar al Carrito" 
+                            CssClass="btn btn-primary btn-lg py-3 fw-bold shadow-sm w-100" OnClick="btnAgregarCarrito_Click" />
+                            
                         <button type="button" class="btn btn-outline-dark btn-lg py-3 fw-semibold">
                             <i class="bi bi-lightning-fill text-warning me-2"></i><span class="text-dark">Comprar Ahora</span>
                         </button>

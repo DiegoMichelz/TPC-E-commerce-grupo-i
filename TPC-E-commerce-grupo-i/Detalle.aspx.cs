@@ -22,18 +22,15 @@ namespace TPC_E_commerce_grupo_i
                     ArticuloNegocio negocio = new ArticuloNegocio();
                     List<Articulo> lista = negocio.Listar();
 
-                    // Buscamos el artículo específico
                     Articulo seleccionado = lista.Find(x => x.Id == id);
 
                     if (seleccionado != null)
                     {
-                        // 1. Asignamos la información de texto a los Labels
                         lblCodigo.Text = seleccionado.Codigo;
                         lblNombre.Text = seleccionado.Nombre;
                         lblPrecio.Text = seleccionado.Precio.ToString("N2");
                         lblDescripcion.Text = seleccionado.Descripcion;
 
-                        // 2. Cargamos las imágenes (si tiene)
                         if (seleccionado.ImagenesUrl != null && seleccionado.ImagenesUrl.Count > 0)
                         {
                             imgPrincipal.ImageUrl = seleccionado.ImagenesUrl[0];
@@ -41,6 +38,35 @@ namespace TPC_E_commerce_grupo_i
                             RepeaterImagenes.DataBind();
                         }
                     }
+                }
+            }
+        }
+
+        protected void btnAgregarCarrito_Click(object sender, EventArgs e)
+        {
+            string idStr = Request.QueryString["id"];
+            if (idStr != null)
+            {
+                int id = int.Parse(idStr);
+                ArticuloNegocio negocio = new ArticuloNegocio();
+                List<Articulo> lista = negocio.Listar();
+
+                // Instancia del objeto Articulo
+                Articulo seleccionado = lista.Find(x => x.Id == id);
+
+                if (seleccionado != null)
+                {
+                    // Obtener o instanciar el Carrito desde la Sesión
+                    Carrito carrito = Session["Carrito"] != null
+                        ? (Carrito)Session["Carrito"]
+                        : new Carrito();
+
+                    // Invocar AgregarItem pasando la instancia de Articulo
+                    carrito.AgregarItem(seleccionado, 1);
+
+                    // Guardar en Session y redirigir
+                    Session["Carrito"] = carrito;
+                    Response.Redirect("Carrito.aspx", false);
                 }
             }
         }
