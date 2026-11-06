@@ -1,17 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-
 
 namespace TPC_E_commerce_grupo_i.Models
 {
     public class Direccion
     {
         public int Id { get; set; }
-        public int IdCliente { get; set; }
         public string Calle { get; set; }
         public string Numero { get; set; }
         public string Piso { get; set; }

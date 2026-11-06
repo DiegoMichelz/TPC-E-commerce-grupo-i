@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace TPC_E_commerce_grupo_i.Models
 {
@@ -17,9 +15,13 @@ namespace TPC_E_commerce_grupo_i.Models
         public decimal Total { get; set; }
         public List<ItemPedido> Elementos { get; set; }
 
+        // Historial mudado como relación del pedido
+        public List<HistorialEstadoPedido> Historial { get; set; }
+
         public Pedido()
         {
             Elementos = new List<ItemPedido>();
+            Historial = new List<HistorialEstadoPedido>();
             Fecha = DateTime.Now;
         }
     }

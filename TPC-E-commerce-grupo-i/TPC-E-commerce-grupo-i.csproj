@@ -112,10 +112,12 @@
     <Content Include="bin\TPC-E-commerce-grupo-i.dll" />
     <Content Include="bin\TPC-E-commerce-grupo-i.pdb" />
     <Content Include="Carrito.aspx" />
+    <Content Include="CategoriasAdmin.aspx" />
     <Content Include="Checkout.aspx" />
     <Content Include="Default.aspx" />
     <Content Include="Detalle.aspx" />
     <Content Include="Global.asax" />
+    <Content Include="MarcasAdmin.aspx" />
     <Content Include="obj\Debug\TPC-E-commerce-grupo-i.csproj.FileListAbsolute.txt" />
     <Content Include="obj\Debug\TPC-E-commerce-grupo-i.dll" />
     <Content Include="obj\Debug\TPC-E-commerce-grupo-i.pdb" />
@@ -136,6 +138,13 @@
     </Compile>
     <Compile Include="Carrito.aspx.designer.cs">
       <DependentUpon>Carrito.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="CategoriasAdmin.aspx.cs">
+      <DependentUpon>CategoriasAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="CategoriasAdmin.aspx.designer.cs">
+      <DependentUpon>CategoriasAdmin.aspx</DependentUpon>
     </Compile>
     <Compile Include="Checkout.aspx.cs">
       <DependentUpon>Checkout.aspx</DependentUpon>
@@ -161,6 +170,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="MarcasAdmin.aspx.cs">
+      <DependentUpon>MarcasAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MarcasAdmin.aspx.designer.cs">
+      <DependentUpon>MarcasAdmin.aspx</DependentUpon>
+    </Compile>
     <Compile Include="MasterE-commerce.Master.cs">
       <DependentUpon>MasterE-commerce.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -181,11 +197,13 @@
     <Compile Include="Models\Marca.cs" />
     <Compile Include="Models\Pedido.cs" />
     <Compile Include="Negocio\AccesoDatos.cs" />
+    <Compile Include="Negocio\CategoriaNegocio.cs" />
     <Compile Include="Negocio\ClienteNegocio.cs" />
     <Compile Include="Negocio\DireccionNegocio.cs" />
     <Compile Include="Negocio\FormaEntregaNegocio.cs" />
     <Compile Include="Negocio\FormaPagoNegocio.cs" />
     <Compile Include="Negocio\ArticuloNegocio.cs" />
+    <Compile Include="Negocio\MarcaNegocio.cs" />
     <Compile Include="Negocio\PedidoNegocio.cs" />
     <Compile Include="obj\Debug\.NETFramework,Version=v4.8.1.AssemblyAttributes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
