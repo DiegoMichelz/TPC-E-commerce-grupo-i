@@ -16,7 +16,7 @@ namespace TPC_E_commerce_grupo_i.Negocio
                 // Traemos los artículos con los nombres de Marca y Categoría
                 string consulta = @"
                     SELECT 
-                        A.Id, A.Codigo, A.Nombre, A.Descripcion, A.Precio, A.ImagenUrl,
+                        A.Id, A.Codigo, A.Nombre, A.Descripcion, A.Precio, 
                         M.Id AS IdMarca, M.Descripcion AS Marca,
                         C.Id AS IdCategoria, C.Descripcion AS Categoria
                     FROM Articulos A
@@ -56,11 +56,26 @@ namespace TPC_E_commerce_grupo_i.Negocio
                         };
                     }
 
-                    // Cargar Imagen Principal/Lista
+                    // Cargar Lista de Imágenes desde la nueva tabla
                     aux.ImagenesUrl = new List<string>();
-                    if (!(datos.Lector["ImagenUrl"] is DBNull) && !string.IsNullOrEmpty((string)datos.Lector["ImagenUrl"]))
+                    AccesoDatos datosImagen = new AccesoDatos();
+                    try
                     {
-                        aux.ImagenesUrl.Add((string)datos.Lector["ImagenUrl"]);
+                        datosImagen.setConsulta("SELECT ImagenUrl FROM Imagenes WHERE IdArticulo = @IdArticulo");
+                        datosImagen.setParametro("@IdArticulo", aux.Id);
+                        datosImagen.ejecutarLectura();
+                        while (datosImagen.Lector.Read())
+                        {
+                            aux.ImagenesUrl.Add((string)datosImagen.Lector["ImagenUrl"]);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw ex;
+                    }
+                    finally
+                    {
+                        datosImagen.cerrarConexion();
                     }
 
                     lista.Add(aux);

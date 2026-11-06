@@ -21,7 +21,7 @@ namespace TPC_E_commerce_grupo_i.Models
             {
                 if (ImagenesUrl != null && ImagenesUrl.Count > 0)
                     return ImagenesUrl[0];
-                return "https://via.placeholder.com/300";
+                return "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80";
             }
         }
     }

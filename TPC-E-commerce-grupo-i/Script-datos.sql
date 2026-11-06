@@ -43,10 +43,16 @@ CREATE TABLE Articulos (
     Descripcion VARCHAR(255) NULL,
     Precio DECIMAL(18,2) NOT NULL,
     Stock INT NOT NULL DEFAULT 0,
-    ImagenUrl VARCHAR(1000) NULL,
     IdMarca INT NULL FOREIGN KEY REFERENCES Marcas(Id),
     IdCategoria INT NULL FOREIGN KEY REFERENCES Categorias(Id),
     Activo BIT NOT NULL DEFAULT 1
+);
+GO
+
+CREATE TABLE Imagenes (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    IdArticulo INT NOT NULL FOREIGN KEY REFERENCES Articulos(Id),
+    ImagenUrl VARCHAR(1000) NOT NULL
 );
 GO
 
@@ -131,9 +137,21 @@ INSERT INTO Categorias (Descripcion) VALUES ('Audio & Gadgets'), ('Pequeños Elec
 INSERT INTO FormasEntrega (Descripcion, Costo, Estado) VALUES ('Retiro en Local', 0.00, 1), ('Envío a Domicilio', 2500.00, 1);
 INSERT INTO FormasPago (Descripcion, Estado) VALUES ('Efectivo / Transferencia', 1), ('Tarjeta de Crédito / Débito', 1);
 
-INSERT INTO Articulos (Codigo, Nombre, Descripcion, Precio, Stock, ImagenUrl, IdMarca, IdCategoria, Activo) VALUES 
-('ART001', 'Auriculares Inalámbricos', 'Auriculares Bluetooth con cancelación de ruido', 35000.00, 15, 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80', 1, 1, 1),
-('ART002', 'Teclado Mecánico RGB', 'Teclado mecánico switch red en español', 45000.00, 10, 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=500&q=80', 3, 3, 1),
-('ART003', 'Mouse Gamer', 'Mouse óptico con 6 botones programables', 18000.00, 25, 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=500&q=80', 3, 3, 1),
-('ART004', 'Cafetera Espresso', 'Cafetera automática con espumador de leche', 120000.00, 5, 'https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?auto=format&fit=crop&w=500&q=80', 2, 2, 1);
+INSERT INTO Articulos (Codigo, Nombre, Descripcion, Precio, Stock, IdMarca, IdCategoria, Activo) VALUES 
+('ART001', 'Auriculares Inalámbricos', 'Auriculares Bluetooth con cancelación de ruido', 35000.00, 15, 1, 1, 1),
+('ART002', 'Teclado Mecánico RGB', 'Teclado mecánico switch red en español', 45000.00, 10, 3, 3, 1),
+('ART003', 'Mouse Gamer', 'Mouse óptico con 6 botones programables', 18000.00, 25, 3, 3, 1),
+('ART004', 'Cafetera Espresso', 'Cafetera automática con espumador de leche', 120000.00, 5, 2, 2, 1);
+GO
+
+INSERT INTO Imagenes (IdArticulo, ImagenUrl) 
+VALUES 
+(1, 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80'),
+(1, 'https://images.unsplash.com/photo-1484704849700-f032a568e944?auto=format&fit=crop&w=500&q=80'), -- Articulo 1 (Auriculares)
+(2, 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?auto=format&fit=crop&w=500&q=80'),
+(2, 'https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?auto=format&fit=crop&w=500&q=80'), -- Articulo 2 (Teclado)
+(3, 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?auto=format&fit=crop&w=500&q=80'),
+(3, 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?auto=format&fit=crop&w=500&q=80'), -- Articulo 3 (Mouse)
+(4, 'https://images.unsplash.com/photo-1570968915860-54d5c301fa9f?auto=format&fit=crop&w=500&q=80'),
+(4, 'https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6?auto=format&fit=crop&w=500&q=80'); -- Articulo 4 (Cafetera)
 GO
