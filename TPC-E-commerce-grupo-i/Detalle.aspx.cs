@@ -57,9 +57,9 @@ namespace TPC_E_commerce_grupo_i
                 if (seleccionado != null)
                 {
                     // Obtener o instanciar el Carrito desde la Sesión
-                    Carrito carrito = Session["Carrito"] != null
-                        ? (Carrito)Session["Carrito"]
-                        : new Carrito();
+                    TPC_E_commerce_grupo_i.Models.Carrito carrito = Session["Carrito"] != null
+                    ? (TPC_E_commerce_grupo_i.Models.Carrito)Session["Carrito"]
+                    : new TPC_E_commerce_grupo_i.Models.Carrito();
 
                     // Invocar AgregarItem pasando la instancia de Articulo
                     carrito.AgregarItem(seleccionado, 1);
