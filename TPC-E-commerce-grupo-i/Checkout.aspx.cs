@@ -62,7 +62,7 @@ namespace TPC_E_commerce_grupo_i
                 Session.Remove("Carrito");
 
                 // 2. Redirigimos a una pantalla de éxito (o al inicio con aviso)
-                Response.Redirect("Default.aspx?compra=exitosa", false);
+                Response.Redirect("Confirmacion.aspx", false);
             }
             catch (Exception ex)
             {
