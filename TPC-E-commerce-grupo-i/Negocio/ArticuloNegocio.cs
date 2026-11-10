@@ -10,19 +10,18 @@ namespace TPC_E_commerce_grupo_i.Negocio
         {
             List<Articulo> lista = new List<Articulo>();
             AccesoDatos datos = new AccesoDatos();
-
             try
             {
-                // Traemos los artículos con los nombres de Marca y Categoría
                 string consulta = @"
-                    SELECT 
-                        A.Id, A.Codigo, A.Nombre, A.Descripcion, A.Precio, 
-                        M.Id AS IdMarca, M.Descripcion AS Marca,
-                        C.Id AS IdCategoria, C.Descripcion AS Categoria
-                    FROM Articulos A
-                    LEFT JOIN Marcas M ON A.IdMarca = M.Id
-                    LEFT JOIN Categorias C ON A.IdCategoria = C.Id
-                    WHERE A.Activo = 1";
+            SELECT 
+                A.Id, A.Codigo, A.Nombre, A.Descripcion, A.Precio,
+                M.Id AS IdMarca, M.Descripcion AS Marca,
+                C.Id AS IdCategoria, C.Descripcion AS Categoria
+            FROM Articulos A
+            LEFT JOIN Marcas M ON A.IdMarca = M.Id
+            LEFT JOIN Categorias C ON A.IdCategoria = C.Id
+            WHERE A.Activo = 1
+            ORDER BY A.Id ASC";
 
                 datos.setConsulta(consulta);
                 datos.ejecutarLectura();
@@ -46,7 +45,7 @@ namespace TPC_E_commerce_grupo_i.Negocio
                         };
                     }
 
-                    // Cargar Categoría
+                    // Cargar Categoria
                     if (!(datos.Lector["IdCategoria"] is DBNull))
                     {
                         aux.Categoria = new Categoria
@@ -56,29 +55,29 @@ namespace TPC_E_commerce_grupo_i.Negocio
                         };
                     }
 
-                    // Cargar Lista de Imágenes desde la nueva tabla
-                    aux.ImagenesUrl = new List<string>();
-                    AccesoDatos datosImagen = new AccesoDatos();
+                    lista.Add(aux);
+                }
+
+                datos.cerrarConexion();
+
+                // Cargamos todas las imágenes de la tabla Imagenes para cada artículo
+                foreach (var art in lista)
+                {
+                    AccesoDatos datosImg = new AccesoDatos();
                     try
                     {
-                        datosImagen.setConsulta("SELECT ImagenUrl FROM Imagenes WHERE IdArticulo = @IdArticulo");
-                        datosImagen.setParametro("@IdArticulo", aux.Id);
-                        datosImagen.ejecutarLectura();
-                        while (datosImagen.Lector.Read())
+                        datosImg.setConsulta("SELECT ImagenUrl FROM Imagenes WHERE IdArticulo = @IdArticulo");
+                        datosImg.setParametro("@IdArticulo", art.Id);
+                        datosImg.ejecutarLectura();
+                        while (datosImg.Lector.Read())
                         {
-                            aux.ImagenesUrl.Add((string)datosImagen.Lector["ImagenUrl"]);
+                            art.ImagenesUrl.Add((string)datosImg.Lector["ImagenUrl"]);
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        throw ex;
                     }
                     finally
                     {
-                        datosImagen.cerrarConexion();
+                        datosImg.cerrarConexion();
                     }
-
-                    lista.Add(aux);
                 }
 
                 return lista;

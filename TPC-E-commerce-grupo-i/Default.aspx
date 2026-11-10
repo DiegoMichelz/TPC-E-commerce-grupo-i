@@ -213,11 +213,11 @@
                             <div class="col">
                                 <div class="card h-100 shadow-sm border-0 position-relative">
                                     <span class="position-absolute top-0 start-0 m-2 badge bg-primary">Disponible</span>
-                                    
-                                   <img src='<%# Eval("ImagenPrincipal") ?? "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=500&q=80" %>' 
-                                       class="card-img-top bg-light object-fit-cover"
-                                       style="height: 180px;"
-                                       alt='<%# Eval("Nombre") %>' />
+
+                                    <img src='<%# Eval("ImagenesUrl") != null && ((List<string>)Eval("ImagenesUrl")).Count > 0 ? ((List<string>)Eval("ImagenesUrl"))[0] : "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80" %>'
+                                        class="card-img-top bg-light"
+                                        style="height: 180px; object-fit: cover;"
+                                        alt='<%# Eval("Nombre") %>' />
 
                                     <div class="card-body d-flex flex-column">
                                         <small class="text-muted text-uppercase" style="font-size: 10px;"><%# Eval("Codigo") %></small>
@@ -227,7 +227,7 @@
                                             <span class="fs-5 fw-bold text-primary">$<%# string.Format("{0:N2}", Eval("Precio")) %></span>
                                         </div>
                                         <a href='Detalle.aspx?id=<%# Eval("Id") %>' class="btn btn-outline-primary btn-sm w-100">
-                                            <i class="bi bi-eye"></i> Ver detalle
+                                            <i class="bi bi-eye"></i>Ver detalle
                                         </a>
                                     </div>
                                 </div>
