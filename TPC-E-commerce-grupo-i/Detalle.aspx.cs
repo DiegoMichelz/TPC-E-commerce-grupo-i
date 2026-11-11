@@ -31,6 +31,17 @@ namespace TPC_E_commerce_grupo_i
                         lblPrecio.Text = seleccionado.Precio.ToString("N2");
                         lblDescripcion.Text = seleccionado.Descripcion;
 
+                        // 1. Mapear Marca y Categoría en el label correspondiente de la tabla de especificaciones
+                        string nombreMarca = seleccionado.Marca != null ? seleccionado.Marca.Descripcion : "Sin Marca";
+                        string nombreCategoria = seleccionado.Categoria != null ? seleccionado.Categoria.Descripcion : "Sin Categoría";
+                        lblMarcaCategoria.Text = $"{nombreMarca} / {nombreCategoria}";
+
+                        // 2. Mapear Descripción Ampliada en la tabla de especificaciones
+                        lblDetalleTecnico.Text = !string.IsNullOrWhiteSpace(seleccionado.Descripcion)
+                            ? seleccionado.Descripcion
+                            : "No hay especificaciones adicionales registradas para este producto.";
+
+                        // 3. Mapear Imágenes
                         if (seleccionado.ImagenesUrl != null && seleccionado.ImagenesUrl.Count > 0)
                         {
                             imgPrincipal.ImageUrl = seleccionado.ImagenesUrl[0];
