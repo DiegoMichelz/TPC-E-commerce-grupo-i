@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterE-commerce.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="TPC_E_commerce_grupo_i.Default" %>
+﻿<%@ Page Title="Catálogo" Language="C#" MasterPageFile="~/MasterE-commerce.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="TPC_E_commerce_grupo_i.Default" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
@@ -10,7 +10,7 @@
 
     <div class="container py-3">
 
-        <!-- Breadcrumb / Barra de Estado -->
+        <!-- Barra de Estado -->
         <div class="bg-light p-2 rounded mb-4 shadow-sm d-flex flex-wrap align-items-center justify-content-between text-muted small">
             <div>
                 <i class="bi bi-shop text-primary me-1"></i><strong class="text-dark">NovaStore Online</strong> / Catálogo Multirrubro / <span class="text-primary fw-semibold">Novedades y Tendencias</span>
@@ -22,7 +22,7 @@
             </div>
         </div>
 
-        <!-- Hero Banner Promocional Multirrubro -->
+        <!-- Banner Promocional Multirrubro -->
         <div class="p-4 p-md-5 mb-5 bg-white border rounded-3 shadow-sm position-relative overflow-hidden">
             <div class="row align-items-center">
                 <div class="col-lg-7 mb-4 mb-lg-0">
@@ -42,8 +42,7 @@
                             <i class="bi bi-fire text-danger me-1"></i>Ver Novedades
                         </a>
                     </div>
-
-                    <!-- Métricas rápidas -->
+                    
                     <div class="row g-2 text-center max-w-md">
                         <div class="col-4">
                             <div class="p-2 bg-light rounded border">
@@ -73,8 +72,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Franja de Confianza 3 Columnas -->
         <div class="row g-3 mb-5">
             <div class="col-md-4">
                 <div class="p-3 bg-white border rounded shadow-sm d-flex align-items-center gap-3 h-100">
@@ -109,15 +106,14 @@
         <div class="bg-white p-3 rounded border shadow-sm mb-4 d-flex flex-wrap align-items-center justify-content-between gap-2">
             <span class="fw-bold text-dark small"><i class="bi bi-grid-fill text-primary me-1"></i>Categorías Rápidas:</span>
             <div class="d-flex flex-wrap gap-2">
-                <button type="button" class="btn btn-sm btn-primary rounded-pill px-3">Todos</button>
-                <button type="button" class="btn btn-sm btn-light border rounded-pill px-3">Tecnología</button>
-                <button type="button" class="btn btn-sm btn-light border rounded-pill px-3">Audio & Gadgets</button>
-                <button type="button" class="btn btn-sm btn-light border rounded-pill px-3">Pequeños Electro</button>
-                <button type="button" class="btn btn-sm btn-light border rounded-pill px-3">Hogar Inteligente</button>
+                <a href="Default.aspx" class="btn btn-sm btn-primary rounded-pill px-3">Todos</a>
+                <asp:Repeater ID="repCategoriasRapidas" runat="server">
+                    <ItemTemplate>
+                        <a href='Default.aspx?idCategoria=<%# Eval("Id") %>' class="btn btn-sm btn-light border rounded-pill px-3"><%# Eval("Descripcion") %></a>
+                    </ItemTemplate>
+                </asp:Repeater>
             </div>
         </div>
-
-        <!-- Main Content Area: Sidebar Filters + Product Grid -->
         <div class="row g-4" id="catalogo-seccion">
 
             <!-- Filtros Laterales (Columna 3) -->
@@ -125,57 +121,36 @@
                 <div class="card border shadow-sm mb-3">
                     <div class="card-header bg-light d-flex justify-content-between align-items-center py-2">
                         <span class="fw-bold small text-dark"><i class="bi bi-sliders me-1 text-primary"></i>Filtros de Búsqueda</span>
-                        <a href="#" class="small text-primary text-decoration-none">Limpiar</a>
+                        <a href="Default.aspx" class="small text-primary text-decoration-none">Limpiar</a>
                     </div>
                     <div class="card-body small">
-                        <!-- Envío Gratis Switch -->
-                        <div class="form-check form-switch bg-light p-2 rounded mb-3">
-                            <input class="form-check-input" type="checkbox" id="envioGratisCheck" checked>
-                            <label class="form-check-label fw-semibold" for="envioGratisCheck">Envío Gratis (+ $50k)</label>
-                        </div>
 
-                        <!-- Departamentos -->
                         <h6 class="text-uppercase fw-bold text-muted" style="font-size: 11px;">Departamentos</h6>
                         <div class="mb-3">
-                            <div class="form-check mb-1">
-                                <input class="form-check-input" type="checkbox" id="cat1">
-                                <label class="form-check-label" for="cat1">Tecnología & Informática (32)</label>
-                            </div>
-                            <div class="form-check mb-1">
-                                <input class="form-check-input" type="checkbox" id="cat2" checked>
-                                <label class="form-check-label" for="cat2">Auriculares & Gadgets (28)</label>
-                            </div>
-                            <div class="form-check mb-1">
-                                <input class="form-check-input" type="checkbox" id="cat3">
-                                <label class="form-check-label" for="cat3">Pequeños Electro (18)</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="cat4">
-                                <label class="form-check-label" for="cat4">Hogar Inteligente (12)</label>
-                            </div>
+                            <asp:Repeater ID="repFiltroCategorias" runat="server">
+                                <ItemTemplate>
+                                    <div class="form-check mb-1">
+                                        <input class="form-check-input" type="checkbox" name="chkCat" value='<%# Eval("Id") %>' id='cat_<%# Eval("Id") %>' <%# EsCategoriaSeleccionada((int)Eval("Id")) ? "checked" : "" %>>
+                                        <label class="form-check-label" for='cat_<%# Eval("Id") %>'><%# Eval("Descripcion") %></label>
+                                    </div>
+                                </ItemTemplate>
+                            </asp:Repeater>
                         </div>
 
                         <!-- Marcas -->
                         <h6 class="text-uppercase fw-bold text-muted" style="font-size: 11px;">Marcas Destacadas</h6>
                         <div class="mb-3">
-                            <div class="form-check mb-1">
-                                <input class="form-check-input" type="checkbox" checked><label class="form-check-label">Samsung</label>
-                            </div>
-                            <div class="form-check mb-1">
-                                <input class="form-check-input" type="checkbox" checked><label class="form-check-label">Philips</label>
-                            </div>
-                            <div class="form-check mb-1">
-                                <input class="form-check-input" type="checkbox"><label class="form-check-label">Xiaomi</label>
-                            </div>
-                            <div class="form-check mb-1">
-                                <input class="form-check-input" type="checkbox"><label class="form-check-label">Logitech</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox"><label class="form-check-label">JBL</label>
-                            </div>
+                            <asp:Repeater ID="repFiltroMarcas" runat="server">
+                                <ItemTemplate>
+                                    <div class="form-check mb-1">
+                                        <input class="form-check-input" type="checkbox" name="chkMarca" value='<%# Eval("Id") %>' id='mar_<%# Eval("Id") %>' <%# EsMarcaSeleccionada((int)Eval("Id")) ? "checked" : "" %>>
+                                        <label class="form-check-label" for='mar_<%# Eval("Id") %>'><%# Eval("Descripcion") %></label>
+                                    </div>
+                                </ItemTemplate>
+                            </asp:Repeater>
                         </div>
 
-                        <button type="button" class="btn btn-primary btn-sm w-100">Aplicar Filtros</button>
+                        <asp:Button ID="btnAplicarFiltros" runat="server" Text="Aplicar Filtros" CssClass="btn btn-primary btn-sm w-100" OnClick="btnAplicarFiltros_Click" />
                     </div>
                 </div>
 
@@ -198,15 +173,16 @@
                     </span>
                     <div class="d-flex align-items-center gap-2 w-100 w-sm-auto">
                         <label class="small text-muted text-nowrap">Ordenar por:</label>
-                        <select class="form-select form-select-sm">
-                            <option selected>Más populares</option>
-                            <option>Menor precio</option>
-                            <option>Mayor precio</option>
-                        </select>
+                        <asp:DropDownList ID="ddlOrden" runat="server" CssClass="form-select form-select-sm" AutoPostBack="true" OnSelectedIndexChanged="ddlOrden_SelectedIndexChanged">
+                            <asp:ListItem Text="Más populares" Value="0"></asp:ListItem>
+                            <asp:ListItem Text="Menor precio" Value="1"></asp:ListItem>
+                            <asp:ListItem Text="Mayor precio" Value="2"></asp:ListItem>
+                            <asp:ListItem Text="Nombre A-Z" Value="3"></asp:ListItem>
+                        </asp:DropDownList>
                     </div>
                 </div>
 
-                <!-- Grilla Dinámica con Repeater para reemplazar las tarjetas estáticas -->
+                <!-- Grilla Dinámica de Productos -->
                 <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-3">
                     <asp:Repeater ID="repArticulos" runat="server">
                         <ItemTemplate>
@@ -214,7 +190,7 @@
                                 <div class="card h-100 shadow-sm border-0 position-relative">
                                     <span class="position-absolute top-0 start-0 m-2 badge bg-primary">Disponible</span>
 
-                                    <img src='<%# Eval("ImagenesUrl") != null && ((List<string>)Eval("ImagenesUrl")).Count > 0 ? ((List<string>)Eval("ImagenesUrl"))[0] : "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80" %>'
+                                    <img src='<%# Eval("ImagenPrincipal") %>'
                                         class="card-img-top bg-light"
                                         style="height: 180px; object-fit: cover;"
                                         alt='<%# Eval("Nombre") %>' />
