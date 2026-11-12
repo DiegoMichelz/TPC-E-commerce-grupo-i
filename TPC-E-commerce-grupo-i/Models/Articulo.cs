@@ -13,6 +13,7 @@ namespace TPC_E_commerce_grupo_i.Models
         public string Descripcion { get; set; }
         public Marca Marca { get; set; }          
         public Categoria Categoria { get; set; }
+        public int Stock { get; set; }
         public List<string> ImagenesUrl { get; set; } = new List<string>();
         public decimal Precio { get; set; }
         public string ImagenPrincipal
