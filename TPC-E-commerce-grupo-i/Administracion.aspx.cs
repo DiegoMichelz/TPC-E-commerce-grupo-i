@@ -56,5 +56,27 @@ namespace TPC_E_commerce_grupo_i
             dgvArticulos.PageIndex = e.NewPageIndex;
             CargarGrilla();
         }
+
+        protected void dgvArticulos_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "Eliminar")
+            {
+                try
+                {
+                    int idArticulo = Convert.ToInt32(e.CommandArgument);
+
+                    ArticuloNegocio negocio = new ArticuloNegocio();
+                    negocio.EliminarLogico(idArticulo);
+
+                    // Recargar la grilla invocando a tu método de carga habitual
+                    CargarGrilla(); // o el método que uses para enlazar dgvArticulos.DataBind()
+                }
+                catch (Exception ex)
+                {
+                    Session.Add("error", ex.ToString());
+                    Response.Redirect("Error.aspx", false);
+                }
+            }
+        }
     }
 }

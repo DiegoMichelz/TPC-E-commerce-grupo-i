@@ -179,5 +179,24 @@ namespace TPC_E_commerce_grupo_i.Negocio
             }
         }
 
+        public void EliminarLogico(int id)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setConsulta("UPDATE Articulos SET Activo = 0 WHERE Id = @id");
+                datos.setParametro("@id", id);
+                datos.ejecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
     }
 }

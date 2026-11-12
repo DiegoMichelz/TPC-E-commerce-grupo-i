@@ -19,6 +19,7 @@ namespace TPC_E_commerce_grupo_i
         protected global::System.Web.UI.WebControls.TextBox txtImagenUrl;
         protected global::System.Web.UI.WebControls.TextBox txtDescripcion;
         protected global::System.Web.UI.WebControls.Button btnGuardar;
+        protected global::System.Web.UI.WebControls.Button btnEliminar;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -76,6 +77,7 @@ namespace TPC_E_commerce_grupo_i
 
                 if (seleccionado.ImagenesUrl != null && seleccionado.ImagenesUrl.Count > 0)
                     txtImagenUrl.Text = seleccionado.ImagenesUrl[0];
+                btnEliminar.Visible = true;
             }
         }
 
@@ -109,6 +111,23 @@ namespace TPC_E_commerce_grupo_i
                 {
                     negocio.Modificar(nuevo);
                 }
+
+                Response.Redirect("Administracion.aspx", false);
+            }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                Response.Redirect("Error.aspx", false);
+            }
+        }
+
+        protected void btnEliminar_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int id = int.Parse(hfIdArticulo.Value);
+                ArticuloNegocio negocio = new ArticuloNegocio();
+                negocio.EliminarLogico(id);
 
                 Response.Redirect("Administracion.aspx", false);
             }

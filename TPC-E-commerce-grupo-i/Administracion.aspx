@@ -2,6 +2,7 @@
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
+
 <asp:Content ID="Content2" ContentPlaceHolderID="ContentPlaceHolder1" runat="server">
     <div class="container mt-4">
         <div class="row">
@@ -16,8 +17,8 @@
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <!-- Grilla dinámica de ASP.NET -->
-                        <asp:GridView ID="dgvArticulos" runat="server" CssClass="table table-striped table-hover" AutoGenerateColumns="false"
-                            DataKeyNames="Id" OnSelectedIndexChanged="dgvArticulos_SelectedIndexChanged" OnPageIndexChanging="dgvArticulos_PageIndexChanging" AllowPaging="true" PageSize="5">
+                        <asp:GridView ID="dgvArticulos" runat="server" CssClass="table table-striped table-hover align-middle" AutoGenerateColumns="false"
+                            DataKeyNames="Id" OnSelectedIndexChanged="dgvArticulos_SelectedIndexChanged" OnRowCommand="dgvArticulos_RowCommand" OnPageIndexChanging="dgvArticulos_PageIndexChanging" AllowPaging="true" PageSize="5">
                             <Columns>
                                 <asp:BoundField HeaderText="ID" DataField="Id" />
                                 <asp:BoundField HeaderText="Código" DataField="Codigo" />
@@ -34,7 +35,21 @@
                                     </ItemTemplate>
                                 </asp:TemplateField>
 
-                                <asp:CommandField ShowSelectButton="true" SelectText="✏️ Modificar" ControlStyle-CssClass="btn btn-sm btn-warning" />
+                             
+                                <asp:TemplateField HeaderText="Acciones">
+                                    <ItemTemplate>
+                                        <a href='<%# "FormularioArticulo.aspx?id=" + Eval("Id") %>' class="btn btn-sm btn-warning me-1">
+                                            ✏️ Modificar
+                                        </a>
+                                        <asp:LinkButton ID="btnEliminarGrilla" runat="server" 
+                                            CssClass="btn btn-sm btn-danger" 
+                                            CommandName="Eliminar" 
+                                            CommandArgument='<%# Eval("Id") %>' 
+                                            OnClientClick="return confirm('¿Está seguro de que desea dar de baja este artículo?');">
+                                            🗑️ Eliminar
+                                        </asp:LinkButton>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
                             </Columns>
                         </asp:GridView>
                     </div>
