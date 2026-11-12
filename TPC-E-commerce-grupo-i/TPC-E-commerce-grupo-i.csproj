@@ -209,6 +209,7 @@
     <Compile Include="Models\ItemPedido.cs" />
     <Compile Include="Models\Marca.cs" />
     <Compile Include="Models\Pedido.cs" />
+    <Compile Include="Models\Usuario.cs" />
     <Compile Include="Negocio\AccesoDatos.cs" />
     <Compile Include="Negocio\CategoriaNegocio.cs" />
     <Compile Include="Negocio\ClienteNegocio.cs" />
@@ -218,6 +219,7 @@
     <Compile Include="Negocio\ArticuloNegocio.cs" />
     <Compile Include="Negocio\MarcaNegocio.cs" />
     <Compile Include="Negocio\PedidoNegocio.cs" />
+    <Compile Include="Negocio\UsuarioNegocio.cs" />
     <Compile Include="obj\Debug\.NETFramework,Version=v4.8.1.AssemblyAttributes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
