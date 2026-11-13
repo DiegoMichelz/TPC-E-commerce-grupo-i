@@ -26,6 +26,23 @@
                             <li class="nav-item"><a class="nav-link" href="~/Carrito.aspx" runat="server">Carrito</a></li>
                             <li class="nav-item"><a class="nav-link" href="~/Administracion.aspx" runat="server">Administración</a></li>
                         </ul>
+                        <!-- 🟢 BLOQUE DE LOGIN / REGISTRO A LA DERECHA -->
+                        <div class="navbar-nav ms-auto align-items-center">
+                            <% if (Session["usuario"] != null)
+                                {
+                                    var user = (TPC_E_commerce_grupo_i.Models.Usuario)Session["usuario"];
+                    %>
+                            <span class="navbar-text me-3 text-white fw-semibold small">
+                                <i class="bi bi-person-circle text-info me-1"></i>Hola, <%: user.Nombre %>
+                        </span>
+                            <asp:Button ID="btnCerrarSesion" runat="server" Text="Cerrar Sesión" CssClass="btn btn-outline-danger btn-sm" OnClick="btnCerrarSesion_Click" />
+                            <% }
+                            else
+                            { %>
+                            <a href="Login.aspx" class="btn btn-outline-light btn-sm me-2">Iniciar Sesión</a>
+                            <a href="Registro.aspx" class="btn btn-primary btn-sm">Registrarse</a>
+                            <% } %>
+                        </div>
                     </div>
                 </div>
             </nav>

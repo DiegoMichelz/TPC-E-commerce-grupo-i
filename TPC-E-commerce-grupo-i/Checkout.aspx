@@ -17,9 +17,14 @@
 
                 <!-- 1. Datos de Contacto y Envío -->
                 <div class="card border shadow-sm rounded-3 p-4 mb-4 bg-white">
-                    <h5 class="fw-bold text-dark mb-3"><i class="bi bi-geo-alt text-primary me-2"></i>1. Dirección de Envío</h5>
+                    <h5 class="fw-bold text-dark mb-3"><i class="bi bi-geo-alt text-primary me-2"></i>Dirección de Envío y Facturación</h5>
 
                     <div class="row g-3">
+                        <!-- Campo de Email agregado para solucionar el error y pedir la factura -->
+                        <div class="col-md-12">
+                            <label class="form-label small text-muted">Correo Electrónico (para enviar la factura)</label>
+                            <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" TextMode="Email" placeholder="correo@ejemplo.com" required="true" />
+                        </div>
                         <div class="col-md-6">
                             <label class="form-label small text-muted">Nombre</label>
                             <asp:TextBox ID="txtNombre" runat="server" CssClass="form-control" placeholder="Ej: Juan" />

@@ -13,5 +13,16 @@ namespace TPC_E_commerce_grupo_i
         {
 
         }
+
+        protected void btnCerrarSesion_Click(object sender, EventArgs e)
+        {
+            // Borramos la sesión del usuario actual
+            Session.Remove("usuario");
+
+            // Redirigimos al inicio
+            Response.Redirect("Default.aspx", false);
+        }
     }
+
+
 }

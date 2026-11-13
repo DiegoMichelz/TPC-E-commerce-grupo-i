@@ -11,6 +11,7 @@ namespace TPC_E_commerce_grupo_i
 {
     public partial class Checkout : System.Web.UI.Page
     {
+   
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -34,6 +35,24 @@ namespace TPC_E_commerce_grupo_i
                 else
                 {
                     Response.Redirect("Default.aspx", false);
+                }
+
+                // 2. 🟢 NUEVO: LÓGICA DE USUARIO LOGUEADO VS INVITADO
+                if (Session["usuario"] != null)
+                {
+                    // Hay un usuario registrado en sesión
+                    Usuario userLogueado = (Usuario)Session["usuario"];
+
+                    // Autocompletamos los campos que ya tenemos en pantalla para ahorrarle tiempo
+                    txtNombre.Text = userLogueado.Nombre;
+                    txtApellido.Text = userLogueado.Apellido;
+
+                    // Opcional: Si querés, podés dejar fijo o precargar el mail si tuvieras un TextBox para el mail en el checkout.
+                }
+                else
+                {
+                    // Es un INVITADO: Los TextBox de nombre y apellido quedan libres y vacíos 
+                    // para que los escriba a mano en el momento, sin pedirle contraseña ni registro.
                 }
             }
         }
