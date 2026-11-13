@@ -119,6 +119,7 @@
     <Content Include="Global.asax" />
     <Content Include="Login.aspx" />
     <Content Include="MarcasAdmin.aspx" />
+    <Content Include="MiPerfil.aspx" />
     <Content Include="obj\Debug\TPC-E-commerce-grupo-i.csproj.FileListAbsolute.txt" />
     <Content Include="obj\Debug\TPC-E-commerce-grupo-i.dll" />
     <Content Include="obj\Debug\TPC-E-commerce-grupo-i.pdb" />
@@ -203,6 +204,13 @@
     </Compile>
     <Compile Include="MasterE-commerce.Master.designer.cs">
       <DependentUpon>MasterE-commerce.Master</DependentUpon>
+    </Compile>
+    <Compile Include="MiPerfil.aspx.cs">
+      <DependentUpon>MiPerfil.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MiPerfil.aspx.designer.cs">
+      <DependentUpon>MiPerfil.aspx</DependentUpon>
     </Compile>
     <Compile Include="Models\Articulo.cs" />
     <Compile Include="Models\Carrito.cs" />

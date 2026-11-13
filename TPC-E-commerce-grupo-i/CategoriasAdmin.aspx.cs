@@ -9,6 +9,12 @@ namespace TPC_E_commerce_grupo_i
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            Usuario user = Session["usuario"] as Usuario;
+            if (user == null || !user.Admin)
+            {
+                Response.Redirect("Default.aspx", false);
+                return;
+            }
             if (!IsPostBack)
             {
                 CargarGrilla();

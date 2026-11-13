@@ -11,7 +11,6 @@ namespace TPC_E_commerce_grupo_i.Negocio
             AccesoDatos datos = new AccesoDatos();
             try
             {
-                // Buscamos coincidencia exacta de Email y Contraseña (parametrizado contra SQL Injection)
                 datos.setConsulta("SELECT Id, Email, Pass, Nombre, Apellido, UrlImagenPerfil, Admin FROM USERS WHERE Email = @email AND Pass = @pass");
                 datos.setParametro("@email", usuario.Email);
                 datos.setParametro("@pass", usuario.Pass);
@@ -20,7 +19,6 @@ namespace TPC_E_commerce_grupo_i.Negocio
 
                 if (datos.Lector.Read())
                 {
-                    // Si encontró el registro, completamos los datos del objeto usuario
                     usuario.Id = (int)datos.Lector["Id"];
                     usuario.Admin = (bool)datos.Lector["Admin"];
 
@@ -33,10 +31,10 @@ namespace TPC_E_commerce_grupo_i.Negocio
                     if (!(datos.Lector["UrlImagenPerfil"] is DBNull))
                         usuario.UrlImagenPerfil = (string)datos.Lector["UrlImagenPerfil"];
 
-                    return true; // Login correcto
+                    return true;
                 }
 
-                return false; // Credenciales inválidas
+                return false;
             }
             catch (Exception ex)
             {
@@ -48,8 +46,7 @@ namespace TPC_E_commerce_grupo_i.Negocio
             }
         }
 
-        // Método para Insertar un Nuevo Usuario (Registrar)
-       
+        // 2. Método para Insertar un Nuevo Usuario (Registrar)
         public int Registrar(Usuario nuevo)
         {
             AccesoDatos datos = new AccesoDatos();
@@ -62,8 +59,31 @@ namespace TPC_E_commerce_grupo_i.Negocio
                 datos.setParametro("@apellido", string.IsNullOrEmpty(nuevo.Apellido) ? (object)DBNull.Value : nuevo.Apellido);
                 datos.setParametro("@admin", nuevo.Admin);
 
-                // ⬇️ Usar ejecutarScalar() y convertir a int en lugar de ejecutarAccion()
                 return Convert.ToInt32(datos.ejecutarScalar());
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
+
+        //Actualizar Datos del Perfil
+        public void Actualizar(Usuario user)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setConsulta("UPDATE USERS SET Nombre = @nombre, Apellido = @apellido, UrlImagenPerfil = @img WHERE Id = @id");
+                datos.setParametro("@nombre", string.IsNullOrEmpty(user.Nombre) ? (object)DBNull.Value : user.Nombre);
+                datos.setParametro("@apellido", string.IsNullOrEmpty(user.Apellido) ? (object)DBNull.Value : user.Apellido);
+                datos.setParametro("@img", string.IsNullOrEmpty(user.UrlImagenPerfil) ? (object)DBNull.Value : user.UrlImagenPerfil);
+                datos.setParametro("@id", user.Id);
+
+                datos.ejecutarAccion();
             }
             catch (Exception ex)
             {
