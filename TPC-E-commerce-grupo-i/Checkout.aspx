@@ -19,23 +19,35 @@
                 <div class="card border shadow-sm rounded-3 p-4 mb-4 bg-white">
                     <h5 class="fw-bold text-dark mb-3"><i class="bi bi-geo-alt text-primary me-2"></i>Dirección de Envío y Facturación</h5>
 
+                    <!-- Cuadrito para usar dirección guardada (Visible solo si el usuario logueado ya guardó una antes) -->
+                    <asp:Panel ID="pnlDireccionGuardada" runat="server" Visible="false" CssClass="alert alert-light border border-primary-subtle bg-light mb-4">
+                        <div class="form-check mb-0">
+                            <asp:CheckBox ID="chkUsarGuardada" runat="server" AutoPostBack="true" OnCheckedChanged="chkUsarGuardada_CheckedChanged" CssClass="form-check-input" />
+                            <label class="form-check-label fw-semibold text-dark ms-1" for="<%= chkUsarGuardada.ClientID %>">
+                                Usar mi dirección guardada
+                                <span class="d-block text-muted small fw-normal">
+                                    <asp:Label ID="lblResumenDireccion" runat="server"></asp:Label>
+                                </span>
+                            </label>
+                        </div>
+                    </asp:Panel>
+
                     <div class="row g-3">
-                        <!-- Campo de Email agregado para solucionar el error y pedir la factura -->
                         <div class="col-md-12">
                             <label class="form-label small text-muted">Correo Electrónico (para enviar la factura)</label>
                             <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control" TextMode="Email" placeholder="correo@ejemplo.com" required="true" />
                         </div>
                         <div class="col-md-6">
                             <label class="form-label small text-muted">Nombre</label>
-                            <asp:TextBox ID="txtNombre" runat="server" CssClass="form-control" placeholder="Ej: Juan" />
+                            <asp:TextBox ID="txtNombre" runat="server" CssClass="form-control" placeholder="Ej: Juan" required="true" />
                         </div>
                         <div class="col-md-6">
                             <label class="form-label small text-muted">Apellido</label>
-                            <asp:TextBox ID="txtApellido" runat="server" CssClass="form-control" placeholder="Ej: Pérez" />
+                            <asp:TextBox ID="txtApellido" runat="server" CssClass="form-control" placeholder="Ej: Pérez" required="true" />
                         </div>
                         <div class="col-md-8">
                             <label class="form-label small text-muted">Calle y Número</label>
-                            <asp:TextBox ID="txtDireccion" runat="server" CssClass="form-control" placeholder="Ej: Av. Rivadavia 1420" />
+                            <asp:TextBox ID="txtDireccion" runat="server" CssClass="form-control" placeholder="Ej: Av. Rivadavia 1420" required="true" />
                         </div>
                         <div class="col-md-4">
                             <label class="form-label small text-muted">Piso / Depto (Opcional)</label>
@@ -43,16 +55,26 @@
                         </div>
                         <div class="col-md-5">
                             <label class="form-label small text-muted">Localidad / Ciudad</label>
-                            <asp:TextBox ID="txtLocalidad" runat="server" CssClass="form-control" placeholder="Ej: Tres Arroyos" />
+                            <asp:TextBox ID="txtLocalidad" runat="server" CssClass="form-control" placeholder="Ej: Tres Arroyos" required="true" />
                         </div>
                         <div class="col-md-4">
                             <label class="form-label small text-muted">Provincia</label>
-                            <asp:TextBox ID="txtProvincia" runat="server" CssClass="form-control" placeholder="Ej: Buenos Aires" />
+                            <asp:TextBox ID="txtProvincia" runat="server" CssClass="form-control" placeholder="Ej: Buenos Aires" required="true" />
                         </div>
                         <div class="col-md-3">
                             <label class="form-label small text-muted">Código Postal</label>
-                            <asp:TextBox ID="txtCP" runat="server" CssClass="form-control" placeholder="Ej: 7500" />
+                            <asp:TextBox ID="txtCP" runat="server" CssClass="form-control" placeholder="Ej: 7500" required="true" />
                         </div>
+
+                        <!-- Checkbox para guardar datos en futuras compras (Visible solo para usuarios logueados) -->
+                        <asp:Panel ID="pnlGuardarDireccion" runat="server" Visible="false" CssClass="col-12 mt-3 pt-2 border-top">
+                            <div class="form-check">
+                                <asp:CheckBox ID="chkGuardarDireccion" runat="server" CssClass="form-check-input" />
+                                <label class="form-check-label small fw-semibold text-secondary ms-1" for="<%= chkGuardarDireccion.ClientID %>">
+                                    Guardar estos datos de envío para futuras compras
+                                </label>
+                            </div>
+                        </asp:Panel>
                     </div>
                 </div>
 

@@ -17,6 +17,16 @@
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <!-- Grilla dinámica de ASP.NET -->
+                        <asp:Panel ID="pnlConfirmarBaja" runat="server" Visible="false" CssClass="alert alert-warning border-warning d-flex justify-content-between align-items-center mb-3">
+                           <div>
+                               <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                               <strong>¿Está seguro de que desea dar de baja este artículo?</strong>
+                           </div>
+                           <div>
+                               <asp:Button ID="btnConfirmarBaja" runat="server" Text="Sí, dar de baja" CssClass="btn btn-danger btn-sm me-2" OnClick="btnConfirmarBaja_Click" />
+                               <asp:Button ID="btnCancelarBaja" runat="server" Text="Cancelar" CssClass="btn btn-outline-secondary btn-sm" OnClick="btnCancelarBaja_Click" />
+                           </div>
+                        </asp:Panel>
                         <asp:GridView ID="dgvArticulos" runat="server" CssClass="table table-striped table-hover align-middle" AutoGenerateColumns="false"
                             DataKeyNames="Id" OnSelectedIndexChanged="dgvArticulos_SelectedIndexChanged" OnRowCommand="dgvArticulos_RowCommand" OnPageIndexChanging="dgvArticulos_PageIndexChanging" AllowPaging="true" PageSize="5">
                             <Columns>
@@ -44,10 +54,8 @@
                                         <asp:LinkButton ID="btnEliminarGrilla" runat="server" 
                                             CssClass="btn btn-sm btn-danger" 
                                             CommandName="Eliminar" 
-                                            CommandArgument='<%# Eval("Id") %>' 
-                                            OnClientClick="return confirm('¿Está seguro de que desea dar de baja este artículo?');">
-                                            🗑️ Eliminar
-                                        </asp:LinkButton>
+                                            CommandArgument='<%# Eval("Id") %>'>
+                                            🗑️ Eliminar</asp:LinkButton>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                             </Columns>

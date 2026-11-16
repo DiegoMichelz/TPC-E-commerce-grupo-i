@@ -78,8 +78,12 @@
                                     <i class="bi bi-arrow-left me-1"></i>Cancelar
                                 </a>
                                 <asp:Button ID="btnEliminar" runat="server" Text="🗑️ Eliminar Artículo" 
-                                    CssClass="btn btn-outline-danger fw-bold" OnClick="btnEliminar_Click" Visible="false" 
-                                    OnClientClick="return confirm('¿Está seguro de que desea dar de baja este artículo?');" />
+                                    CssClass="btn btn-outline-danger fw-bold" OnClick="btnEliminar_Click" Visible="false" />
+                                    <asp:Panel ID="pnlConfirmarBaja" runat="server" Visible="false" CssClass="alert alert-warning border-warning mt-3">
+                                        <p class="fw-bold mb-2"><i class="bi bi-exclamation-triangle-fill me-2"></i>¿Está seguro de que desea dar de baja este artículo?</p>
+                                        <asp:Button ID="btnConfirmarBaja" runat="server" Text="Sí, confirmar baja" CssClass="btn btn-danger btn-sm me-2" OnClick="btnConfirmarBaja_Click" />
+                                        <asp:Button ID="btnCancelarBaja" runat="server" Text="Cancelar" CssClass="btn btn-outline-secondary btn-sm" OnClick="btnCancelarBaja_Click" />
+                                   </asp:Panel>
                             </div>
                             <div>
                                 <asp:Button ID="btnGuardar" runat="server" Text="Guardar Artículo" CssClass="btn btn-success px-4 fw-bold" OnClick="btnGuardar_Click" />

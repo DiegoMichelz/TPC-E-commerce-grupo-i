@@ -20,6 +20,7 @@ namespace TPC_E_commerce_grupo_i
         protected global::System.Web.UI.WebControls.TextBox txtDescripcion;
         protected global::System.Web.UI.WebControls.Button btnGuardar;
         protected global::System.Web.UI.WebControls.Button btnEliminar;
+        protected global::System.Web.UI.WebControls.Panel pnlConfirmarBaja;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -129,6 +130,11 @@ namespace TPC_E_commerce_grupo_i
 
         protected void btnEliminar_Click(object sender, EventArgs e)
         {
+            pnlConfirmarBaja.Visible = true;
+        }
+
+        protected void btnConfirmarBaja_Click(object sender, EventArgs e)
+        {
             try
             {
                 int id = int.Parse(hfIdArticulo.Value);
@@ -142,6 +148,11 @@ namespace TPC_E_commerce_grupo_i
                 Session.Add("error", ex.ToString());
                 Response.Redirect("Error.aspx", false);
             }
+        }
+
+        protected void btnCancelarBaja_Click(object sender, EventArgs e)
+        {
+            pnlConfirmarBaja.Visible = false;
         }
     }
 }

@@ -1,104 +1,77 @@
 ﻿using System;
-using System.Collections.Generic;
 using TPC_E_commerce_grupo_i.Models;
 
 namespace TPC_E_commerce_grupo_i.Negocio
 {
     public class DireccionNegocio
     {
-        // 1. Obtener todas las direcciones asociadas a un cliente
-        public List<Direccion> ListarPorCliente(int idCliente)
+        public int ObtenerOCrearCliente(Usuario user, string nombreForm, string apellidoForm)
         {
-            List<Direccion> lista = new List<Direccion>();
             AccesoDatos datos = new AccesoDatos();
-
             try
             {
-                datos.setConsulta("SELECT Id, Calle, Numero, Piso, Departamento, CodigoPostal, Localidad, Provincia, Alias, EsPredeterminada, Activo FROM Direcciones WHERE IdCliente = @idCliente AND Activo = 1");
-                datos.setParametro("@idCliente", idCliente);
-                datos.ejecutarLectura();
-
-                while (datos.Lector.Read())
-                {
-                    Direccion aux = new Direccion();
-                    aux.Id = (int)datos.Lector["Id"];
-                    // aux.IdCliente se omitió en C# por composición en el modelo de dominio
-                    aux.Calle = (string)datos.Lector["Calle"];
-                    aux.Numero = (string)datos.Lector["Numero"];
-
-                    if (!(datos.Lector["Piso"] is DBNull))
-                        aux.Piso = (string)datos.Lector["Piso"];
-
-                    if (!(datos.Lector["Departamento"] is DBNull))
-                        aux.Departamento = (string)datos.Lector["Departamento"];
-
-                    aux.CodigoPostal = (string)datos.Lector["CodigoPostal"];
-                    aux.Localidad = (string)datos.Lector["Localidad"];
-                    aux.Provincia = (string)datos.Lector["Provincia"];
-
-                    if (!(datos.Lector["Alias"] is DBNull))
-                        aux.Alias = (string)datos.Lector["Alias"];
-
-                    aux.EsPredeterminada = (bool)datos.Lector["EsPredeterminada"];
-                    aux.Activo = (bool)datos.Lector["Activo"];
-
-                    lista.Add(aux);
-                }
-
-                return lista;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                datos.cerrarConexion();
-            }
-        }
-
-        // 2. Obtener una dirección específica por su ID
-        public Direccion BuscarPorId(int id)
-        {
-            Direccion direccion = null;
-            AccesoDatos datos = new AccesoDatos();
-
-            try
-            {
-                datos.setConsulta("SELECT Id, Calle, Numero, Piso, Departamento, CodigoPostal, Localidad, Provincia, Alias, EsPredeterminada, Activo FROM Direcciones WHERE Id = @id AND Activo = 1");
-                datos.setParametro("@id", id);
+                datos.setConsulta("SELECT Id FROM Clientes WHERE Email = @email");
+                datos.setParametro("@email", user.Email);
                 datos.ejecutarLectura();
 
                 if (datos.Lector.Read())
                 {
-                    direccion = new Direccion();
-                    direccion.Id = (int)datos.Lector["Id"];
-                    // direccion.IdCliente se omitió en C# por composición en el modelo de dominio
-                    direccion.Calle = (string)datos.Lector["Calle"];
-                    direccion.Numero = (string)datos.Lector["Numero"];
+                    return (int)datos.Lector["Id"];
+                }
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
 
-                    if (!(datos.Lector["Piso"] is DBNull))
-                        direccion.Piso = (string)datos.Lector["Piso"];
+            AccesoDatos datosInsert = new AccesoDatos();
+            try
+            {
+                string nombre = !string.IsNullOrWhiteSpace(nombreForm) ? nombreForm : (!string.IsNullOrWhiteSpace(user.Nombre) ? user.Nombre : "Cliente");
+                string apellido = !string.IsNullOrWhiteSpace(apellidoForm) ? apellidoForm : (!string.IsNullOrWhiteSpace(user.Apellido) ? user.Apellido : "Web");
 
-                    if (!(datos.Lector["Departamento"] is DBNull))
-                        direccion.Departamento = (string)datos.Lector["Departamento"];
+                datosInsert.setConsulta("INSERT INTO Clientes (Nombre, Apellido, Email, Contrasena, Activo) OUTPUT INSERTED.Id VALUES (@nombre, @apellido, @email, @pass, 1)");
+                datosInsert.setParametro("@nombre", nombre);
+                datosInsert.setParametro("@apellido", apellido);
+                datosInsert.setParametro("@email", user.Email);
+                datosInsert.setParametro("@pass", string.IsNullOrEmpty(user.Pass) ? "1234" : user.Pass);
 
-                    direccion.CodigoPostal = (string)datos.Lector["CodigoPostal"];
-                    direccion.Localidad = (string)datos.Lector["Localidad"];
-                    direccion.Provincia = (string)datos.Lector["Provincia"];
+                return Convert.ToInt32(datosInsert.ejecutarScalar());
+            }
+            finally
+            {
+                datosInsert.cerrarConexion();
+            }
+        }
 
-                    if (!(datos.Lector["Alias"] is DBNull))
-                        direccion.Alias = (string)datos.Lector["Alias"];
+        public Direccion ObtenerPorEmail(string email)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setConsulta(@"SELECT TOP 1 d.Id, d.Calle, d.Numero, d.Piso, d.Departamento, d.CodigoPostal, d.Localidad, d.Provincia 
+                                    FROM Direcciones d 
+                                    INNER JOIN Clientes c ON d.IdCliente = c.Id 
+                                    WHERE c.Email = @email AND d.Activo = 1 
+                                    ORDER BY d.EsPredeterminada DESC, d.Id DESC");
+                datos.setParametro("@email", email);
+                datos.ejecutarLectura();
 
-                    direccion.EsPredeterminada = (bool)datos.Lector["EsPredeterminada"];
-                    direccion.Activo = (bool)datos.Lector["Activo"];
+                if (datos.Lector.Read())
+                {
+                    Direccion dir = new Direccion();
+                    dir.Id = (int)datos.Lector["Id"];
+                    dir.Calle = datos.Lector["Calle"].ToString();
+                    dir.Numero = datos.Lector["Numero"] is DBNull ? "" : datos.Lector["Numero"].ToString();
+                    dir.Piso = datos.Lector["Piso"] is DBNull ? "" : datos.Lector["Piso"].ToString();
+                    dir.Departamento = datos.Lector["Departamento"] is DBNull ? "" : datos.Lector["Departamento"].ToString();
+                    dir.CodigoPostal = datos.Lector["CodigoPostal"].ToString();
+                    dir.Localidad = datos.Lector["Localidad"].ToString();
+                    dir.Provincia = datos.Lector["Provincia"].ToString();
+                    return dir;
                 }
 
-                return direccion;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
+                return null;
             }
             finally
             {
@@ -106,84 +79,33 @@ namespace TPC_E_commerce_grupo_i.Negocio
             }
         }
 
-        // 3. Agregar una nueva dirección recibiendo el idCliente de forma explícita
-        public void Agregar(Direccion nueva, int idCliente)
+        public void GuardarOActualizar(Direccion dir, int idCliente)
         {
             AccesoDatos datos = new AccesoDatos();
-
             try
             {
-                datos.setConsulta("INSERT INTO Direcciones (IdCliente, Calle, Numero, Piso, Departamento, CodigoPostal, Localidad, Provincia, Alias, EsPredeterminada, Activo) VALUES (@idCliente, @calle, @numero, @piso, @depto, @cp, @localidad, @provincia, @alias, @predeterminada, 1)");
+                if (dir.Id > 0)
+                {
+                    datos.setConsulta(@"UPDATE Direcciones 
+                                        SET Calle = @calle, Numero = @numero, Piso = @piso, CodigoPostal = @cp, Localidad = @localidad, Provincia = @provincia 
+                                        WHERE Id = @id");
+                    datos.setParametro("@id", dir.Id);
+                }
+                else
+                {
+                    datos.setConsulta(@"INSERT INTO Direcciones (IdCliente, Calle, Numero, Piso, CodigoPostal, Localidad, Provincia, EsPredeterminada, Activo) 
+                                        VALUES (@idCliente, @calle, @numero, @piso, @cp, @localidad, @provincia, 1, 1)");
+                    datos.setParametro("@idCliente", idCliente);
+                }
 
-                datos.setParametro("@idCliente", idCliente);
-                datos.setParametro("@calle", nueva.Calle);
-                datos.setParametro("@numero", nueva.Numero);
-                datos.setParametro("@piso", (object)nueva.Piso ?? DBNull.Value);
-                datos.setParametro("@depto", (object)nueva.Departamento ?? DBNull.Value);
-                datos.setParametro("@cp", nueva.CodigoPostal);
-                datos.setParametro("@localidad", nueva.Localidad);
-                datos.setParametro("@provincia", nueva.Provincia);
-                datos.setParametro("@alias", (object)nueva.Alias ?? DBNull.Value);
-                datos.setParametro("@predeterminada", nueva.EsPredeterminada);
-
-                datos.ejecutarAccion();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                datos.cerrarConexion();
-            }
-        }
-
-        // 4. Modificar una dirección existente
-        public void Modificar(Direccion direccion)
-        {
-            AccesoDatos datos = new AccesoDatos();
-
-            try
-            {
-                datos.setConsulta("UPDATE Direcciones SET Calle = @calle, Numero = @numero, Piso = @piso, Departamento = @depto, CodigoPostal = @cp, Localidad = @localidad, Provincia = @provincia, Alias = @alias, EsPredeterminada = @predeterminada WHERE Id = @id");
-
-                datos.setParametro("@id", direccion.Id);
-                datos.setParametro("@calle", direccion.Calle);
-                datos.setParametro("@numero", direccion.Numero);
-                datos.setParametro("@piso", (object)direccion.Piso ?? DBNull.Value);
-                datos.setParametro("@depto", (object)direccion.Departamento ?? DBNull.Value);
-                datos.setParametro("@cp", direccion.CodigoPostal);
-                datos.setParametro("@localidad", direccion.Localidad);
-                datos.setParametro("@provincia", direccion.Provincia);
-                datos.setParametro("@alias", (object)direccion.Alias ?? DBNull.Value);
-                datos.setParametro("@predeterminada", direccion.EsPredeterminada);
+                datos.setParametro("@calle", dir.Calle);
+                datos.setParametro("@numero", string.IsNullOrEmpty(dir.Numero) ? "S/N" : dir.Numero);
+                datos.setParametro("@piso", string.IsNullOrEmpty(dir.Piso) ? (object)DBNull.Value : dir.Piso);
+                datos.setParametro("@cp", dir.CodigoPostal);
+                datos.setParametro("@localidad", dir.Localidad);
+                datos.setParametro("@provincia", dir.Provincia);
 
                 datos.ejecutarAccion();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                datos.cerrarConexion();
-            }
-        }
-
-        // 5. Baja lógica de una dirección
-        public void EliminarLogico(int id)
-        {
-            AccesoDatos datos = new AccesoDatos();
-
-            try
-            {
-                datos.setConsulta("UPDATE Direcciones SET Activo = 0 WHERE Id = @id");
-                datos.setParametro("@id", id);
-                datos.ejecutarAccion();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
             }
             finally
             {

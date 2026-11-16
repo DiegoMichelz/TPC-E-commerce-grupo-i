@@ -67,22 +67,38 @@ namespace TPC_E_commerce_grupo_i
         {
             if (e.CommandName == "Eliminar")
             {
-                try
+                ViewState["IdArticuloEliminar"] = Convert.ToInt32(e.CommandArgument);
+                pnlConfirmarBaja.Visible = true;
+            }
+        }
+
+        protected void btnConfirmarBaja_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (ViewState["IdArticuloEliminar"] != null)
                 {
-                    int idArticulo = Convert.ToInt32(e.CommandArgument);
+                    int idArticulo = (int)ViewState["IdArticuloEliminar"];
 
                     ArticuloNegocio negocio = new ArticuloNegocio();
                     negocio.EliminarLogico(idArticulo);
 
-                    // Recargar la grilla invocando a tu método de carga habitual
-                    CargarGrilla(); // o el método que uses para enlazar dgvArticulos.DataBind()
-                }
-                catch (Exception ex)
-                {
-                    Session.Add("error", ex.ToString());
-                    Response.Redirect("Error.aspx", false);
+                    ViewState["IdArticuloEliminar"] = null;
+                    pnlConfirmarBaja.Visible = false;
+                    CargarGrilla();
                 }
             }
+            catch (Exception ex)
+            {
+                Session.Add("error", ex.ToString());
+                Response.Redirect("Error.aspx", false);
+            }
+        }
+
+        protected void btnCancelarBaja_Click(object sender, EventArgs e)
+        {
+            ViewState["IdArticuloEliminar"] = null;
+            pnlConfirmarBaja.Visible = false;
         }
     }
 }

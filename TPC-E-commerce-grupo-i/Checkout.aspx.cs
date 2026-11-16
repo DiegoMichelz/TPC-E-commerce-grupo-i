@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.UI;
-using System.Web.UI.WebControls;
 using TPC_E_commerce_grupo_i.Models;
 using TPC_E_commerce_grupo_i.Negocio;
 
@@ -11,49 +7,84 @@ namespace TPC_E_commerce_grupo_i
 {
     public partial class Checkout : System.Web.UI.Page
     {
-   
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                // Validamos que exista un carrito con productos en la sesión
                 if (Session["Carrito"] != null)
                 {
                     Models.Carrito carrito = (Models.Carrito)Session["Carrito"];
                     if (carrito.Items != null && carrito.Items.Count > 0)
                     {
-                        // Mostramos los montos reales actualizados
                         lblSubtotal.Text = carrito.Total.ToString("N2");
                         lblTotal.Text = carrito.Total.ToString("N2");
                     }
                     else
                     {
-                        // Si el carrito está vacío, volvemos al catálogo
                         Response.Redirect("Default.aspx", false);
+                        return;
                     }
                 }
                 else
                 {
                     Response.Redirect("Default.aspx", false);
+                    return;
                 }
 
-                // 2. 🟢 NUEVO: LÓGICA DE USUARIO LOGUEADO VS INVITADO
                 if (Session["usuario"] != null)
                 {
-                    // Hay un usuario registrado en sesión
                     Usuario userLogueado = (Usuario)Session["usuario"];
 
-                    // Autocompletamos los campos que ya tenemos en pantalla para ahorrarle tiempo
+                    pnlGuardarDireccion.Visible = true;
+
+                    txtEmail.Text = userLogueado.Email;
+                    txtEmail.ReadOnly = true;
                     txtNombre.Text = userLogueado.Nombre;
                     txtApellido.Text = userLogueado.Apellido;
 
-                    // Opcional: Si querés, podés dejar fijo o precargar el mail si tuvieras un TextBox para el mail en el checkout.
+                    DireccionNegocio dirNegocio = new DireccionNegocio();
+                    Direccion dirGuardada = dirNegocio.ObtenerPorEmail(userLogueado.Email);
+
+                    if (dirGuardada != null)
+                    {
+                        ViewState["IdDireccionGuardada"] = dirGuardada.Id;
+
+                        pnlDireccionGuardada.Visible = true;
+                        string piso = string.IsNullOrWhiteSpace(dirGuardada.Piso) ? "" : $" ({dirGuardada.Piso})";
+                        lblResumenDireccion.Text = $"{dirGuardada.Calle}{piso} - {dirGuardada.Localidad}, {dirGuardada.Provincia} (CP {dirGuardada.CodigoPostal})";
+                    }
                 }
-                else
+            }
+        }
+
+        protected void chkUsarGuardada_CheckedChanged(object sender, EventArgs e)
+        {
+            if (Session["usuario"] == null) return;
+
+            if (chkUsarGuardada.Checked)
+            {
+                Usuario userLogueado = (Usuario)Session["usuario"];
+                DireccionNegocio dirNegocio = new DireccionNegocio();
+                Direccion dirGuardada = dirNegocio.ObtenerPorEmail(userLogueado.Email);
+
+                if (dirGuardada != null)
                 {
-                    // Es un INVITADO: Los TextBox de nombre y apellido quedan libres y vacíos 
-                    // para que los escriba a mano en el momento, sin pedirle contraseña ni registro.
+                    txtDireccion.Text = dirGuardada.Calle;
+                    txtPisoDepto.Text = dirGuardada.Piso;
+                    txtLocalidad.Text = dirGuardada.Localidad;
+                    txtProvincia.Text = dirGuardada.Provincia;
+                    txtCP.Text = dirGuardada.CodigoPostal;
+
+                    chkGuardarDireccion.Checked = false;
                 }
+            }
+            else
+            {
+                txtDireccion.Text = "";
+                txtPisoDepto.Text = "";
+                txtLocalidad.Text = "";
+                txtProvincia.Text = "";
+                txtCP.Text = "";
             }
         }
 
@@ -64,28 +95,39 @@ namespace TPC_E_commerce_grupo_i
                 Models.Carrito carrito = (Models.Carrito)Session["Carrito"];
                 if (carrito == null) return;
 
-                // Aquí podés armar tu objeto Pedido y persistirlo con PedidoNegocio
-                // Ejemplo de estructura genérica:
-                /*
-                Pedido nuevoPedido = new Pedido();
-                nuevoPedido.Fecha = DateTime.Now;
-                nuevoPedido.Total = carrito.Total;
-                nuevoPedido.DireccionEnvio = txtDireccion.Text + ", " + txtLocalidad.Text;
-                
-                // Guardamos en la base de datos
-                PedidoNegocio negocio = new PedidoNegocio();
-                int idPedido = negocio.Agregar(nuevoPedido, carrito.Items);
-                */
+                if (Session["usuario"] != null && chkGuardarDireccion.Checked)
+                {
+                    Usuario userLogueado = (Usuario)Session["usuario"];
+                    DireccionNegocio dirNegocio = new DireccionNegocio();
 
-                // 1. Vaciamos el carrito de la sesión tras la compra exitosa
+                    int idCliente = dirNegocio.ObtenerOCrearCliente(userLogueado, txtNombre.Text.Trim(), txtApellido.Text.Trim());
+
+                    Direccion dir = new Direccion();
+                    dir.Id = ViewState["IdDireccionGuardada"] != null ? (int)ViewState["IdDireccionGuardada"] : 0;
+                    dir.Calle = txtDireccion.Text.Trim();
+                    dir.Numero = "S/N";
+                    dir.Piso = txtPisoDepto.Text.Trim();
+                    dir.Localidad = txtLocalidad.Text.Trim();
+                    dir.Provincia = txtProvincia.Text.Trim();
+                    dir.CodigoPostal = txtCP.Text.Trim();
+
+                    dirNegocio.GuardarOActualizar(dir, idCliente);
+
+                    if (string.IsNullOrWhiteSpace(userLogueado.Nombre) || string.IsNullOrWhiteSpace(userLogueado.Apellido))
+                    {
+                        userLogueado.Nombre = txtNombre.Text.Trim();
+                        userLogueado.Apellido = txtApellido.Text.Trim();
+                        UsuarioNegocio userNegocio = new UsuarioNegocio();
+                        userNegocio.Actualizar(userLogueado);
+                        Session["usuario"] = userLogueado;
+                    }
+                }
+
                 Session.Remove("Carrito");
-
-                // 2. Redirigimos a una pantalla de éxito (o al inicio con aviso)
                 Response.Redirect("Confirmacion.aspx", false);
             }
             catch (Exception ex)
             {
-                // Manejo de errores básico en caso de que falle la base de datos
                 throw ex;
             }
         }
