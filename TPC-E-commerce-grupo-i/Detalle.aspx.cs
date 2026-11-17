@@ -4,8 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using TPC_E_commerce_grupo_i.Models;
-using TPC_E_commerce_grupo_i.Negocio;
+using dominio;
+using negocio;
 
 namespace TPC_E_commerce_grupo_i
 {
@@ -59,23 +59,24 @@ namespace TPC_E_commerce_grupo_i
             if (idStr != null)
             {
                 int id = int.Parse(idStr);
-                ArticuloNegocio negocio = new ArticuloNegocio();
-                List<Articulo> lista = negocio.Listar();
 
-                // Instancia del objeto Articulo
-                Articulo seleccionado = lista.Find(x => x.Id == id);
+                // Usamos la capa de negocio
+                ArticuloNegocio negocio = new ArticuloNegocio();
+
+                // 1. Instancia del objeto Articulo pertenecientes al dominio
+                dominio.Articulo seleccionado = negocio.Listar().Find(x => x.Id == id);
 
                 if (seleccionado != null)
                 {
-                    // Obtener o instanciar el Carrito desde la Sesión
-                    TPC_E_commerce_grupo_i.Models.Carrito carrito = Session["Carrito"] != null
-                    ? (TPC_E_commerce_grupo_i.Models.Carrito)Session["Carrito"]
-                    : new TPC_E_commerce_grupo_i.Models.Carrito();
+                    // 2. Obtener o instanciar el Carrito de la Sesión garantizando el tipo dominio.Carrito
+                    dominio.Carrito carrito = Session["Carrito"] != null
+                        ? (dominio.Carrito)Session["Carrito"]
+                        : new dominio.Carrito();
 
-                    // Invocar AgregarItem pasando la instancia de Articulo
+                    // 3. Invocamos AgregarItem pasando la instancia del tipo dominio.Articulo
                     carrito.AgregarItem(seleccionado, 1);
 
-                    // Guardar en Session y redirigir
+                    // 4. Guardar en Session y redirigir
                     Session["Carrito"] = carrito;
                     Response.Redirect("Carrito.aspx", false);
                 }

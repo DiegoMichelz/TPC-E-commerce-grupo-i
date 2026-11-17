@@ -212,29 +212,6 @@
     <Compile Include="MiPerfil.aspx.designer.cs">
       <DependentUpon>MiPerfil.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Models\Articulo.cs" />
-    <Compile Include="Models\Carrito.cs" />
-    <Compile Include="Models\Categoria.cs" />
-    <Compile Include="Models\Cliente.cs" />
-    <Compile Include="Models\Direccion.cs" />
-    <Compile Include="Models\FormaEntrega.cs" />
-    <Compile Include="Models\FormaPago.cs" />
-    <Compile Include="Models\HistorialEstadoPedido.cs" />
-    <Compile Include="Models\ItemCarrito.cs" />
-    <Compile Include="Models\ItemPedido.cs" />
-    <Compile Include="Models\Marca.cs" />
-    <Compile Include="Models\Pedido.cs" />
-    <Compile Include="Models\Usuario.cs" />
-    <Compile Include="Negocio\AccesoDatos.cs" />
-    <Compile Include="Negocio\CategoriaNegocio.cs" />
-    <Compile Include="Negocio\ClienteNegocio.cs" />
-    <Compile Include="Negocio\DireccionNegocio.cs" />
-    <Compile Include="Negocio\FormaEntregaNegocio.cs" />
-    <Compile Include="Negocio\FormaPagoNegocio.cs" />
-    <Compile Include="Negocio\ArticuloNegocio.cs" />
-    <Compile Include="Negocio\MarcaNegocio.cs" />
-    <Compile Include="Negocio\PedidoNegocio.cs" />
-    <Compile Include="Negocio\UsuarioNegocio.cs" />
     <Compile Include="obj\Debug\.NETFramework,Version=v4.8.1.AssemblyAttributes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registro.aspx.cs">
@@ -272,7 +249,19 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Models\" />
+    <Folder Include="Negocio\" />
     <Folder Include="obj\Debug\TempPE\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\dominio\dominio.csproj">
+      <Project>{40e489fe-3b9d-47f1-bc0c-80208ba8639c}</Project>
+      <Name>dominio</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\negocio\negocio.csproj">
+      <Project>{bdc7413b-272f-41bb-8531-fe5e5a49fb75}</Project>
+      <Name>negocio</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

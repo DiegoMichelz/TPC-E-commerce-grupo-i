@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using TPC_E_commerce_grupo_i.Models;
-using TPC_E_commerce_grupo_i.Negocio;
+using dominio;
+using negocio;
 
 namespace TPC_E_commerce_grupo_i
 {

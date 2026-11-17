@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using TPC_E_commerce_grupo_i.Models;
+using dominio; // Importante: Referencia directa a la biblioteca de clases de Dominio
 
 namespace TPC_E_commerce_grupo_i
 {
-    public partial class Carrito : System.Web.UI.Page
+    public partial class Carrito : Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -22,7 +20,8 @@ namespace TPC_E_commerce_grupo_i
         {
             if (Session["Carrito"] != null)
             {
-                Models.Carrito carrito = (Models.Carrito)Session["Carrito"];
+                // ✅ Casteo directo a la clase Carrito del proyecto 'dominio'
+                dominio.Carrito carrito = (dominio.Carrito)Session["Carrito"];
 
                 repCarrito.DataSource = carrito.Items;
                 repCarrito.DataBind();
@@ -35,6 +34,7 @@ namespace TPC_E_commerce_grupo_i
                 repCarrito.DataSource = null;
                 repCarrito.DataBind();
                 lblTotalGeneral.Text = "0.00";
+                lblTotalGeneralDos.Text = "0.00";
             }
         }
 
@@ -42,19 +42,20 @@ namespace TPC_E_commerce_grupo_i
         {
             if (Session["Carrito"] != null)
             {
-                Models.Carrito carrito = (Models.Carrito)Session["Carrito"];
+                // ✅ Casteo directo sin usar el prefijo 'Models.'
+                dominio.Carrito carrito = (dominio.Carrito)Session["Carrito"];
                 int idArticulo = int.Parse(e.CommandArgument.ToString());
 
-                // Buscamos el ítem actual para ver su cantidad
+                // Buscamos el ítem actual en la lista del dominio
                 var itemActual = carrito.Items.FirstOrDefault(x => x.Producto.Id == idArticulo);
 
                 if (e.CommandName == "Eliminar")
                 {
-                    carrito.QuitarItem(idArticulo); // Usamos tu método QuitarItem
+                    carrito.QuitarItem(idArticulo);
                 }
                 else if (e.CommandName == "Sumar" && itemActual != null)
                 {
-                    carrito.ModificarCantidad(idArticulo, itemActual.Cantidad + 1); // Usamos tu método ModificarCantidad
+                    carrito.ModificarCantidad(idArticulo, itemActual.Cantidad + 1);
                 }
                 else if (e.CommandName == "Restar" && itemActual != null)
                 {
@@ -70,8 +71,8 @@ namespace TPC_E_commerce_grupo_i
         {
             if (Session["Carrito"] != null)
             {
-                Models.Carrito carrito = (Models.Carrito)Session["Carrito"];
-                carrito.Limpiar(); // Usamos tu método Limpiar
+                dominio.Carrito carrito = (dominio.Carrito)Session["Carrito"];
+                carrito.Limpiar();
                 Session["Carrito"] = carrito;
                 CargarCarrito();
             }

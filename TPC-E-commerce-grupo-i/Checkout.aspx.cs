@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web.UI;
-using TPC_E_commerce_grupo_i.Models;
-using TPC_E_commerce_grupo_i.Negocio;
+using dominio;
+using negocio;
 
 namespace TPC_E_commerce_grupo_i
 {
@@ -13,7 +13,9 @@ namespace TPC_E_commerce_grupo_i
             {
                 if (Session["Carrito"] != null)
                 {
-                    Models.Carrito carrito = (Models.Carrito)Session["Carrito"];
+                    // ✅ Casteo explícito forzando el uso de la clase del proyecto 'dominio'
+                    dominio.Carrito carrito = (dominio.Carrito)Session["Carrito"];
+
                     if (carrito.Items != null && carrito.Items.Count > 0)
                     {
                         lblSubtotal.Text = carrito.Total.ToString("N2");
@@ -33,7 +35,8 @@ namespace TPC_E_commerce_grupo_i
 
                 if (Session["usuario"] != null)
                 {
-                    Usuario userLogueado = (Usuario)Session["usuario"];
+                    // ✅ Aplicamos el mismo casteo de namespace para el usuario
+                    dominio.Usuario userLogueado = (dominio.Usuario)Session["usuario"];
 
                     pnlGuardarDireccion.Visible = true;
 
@@ -43,7 +46,7 @@ namespace TPC_E_commerce_grupo_i
                     txtApellido.Text = userLogueado.Apellido;
 
                     DireccionNegocio dirNegocio = new DireccionNegocio();
-                    Direccion dirGuardada = dirNegocio.ObtenerPorEmail(userLogueado.Email);
+                    dominio.Direccion dirGuardada = dirNegocio.ObtenerPorEmail(userLogueado.Email);
 
                     if (dirGuardada != null)
                     {
@@ -56,6 +59,9 @@ namespace TPC_E_commerce_grupo_i
                 }
             }
         }
+
+
+
 
         protected void chkUsarGuardada_CheckedChanged(object sender, EventArgs e)
         {
@@ -92,7 +98,8 @@ namespace TPC_E_commerce_grupo_i
         {
             try
             {
-                Models.Carrito carrito = (Models.Carrito)Session["Carrito"];
+                // ✅ Se quita el prefijo 'Models.' para usar directamente la clase de 'dominio'
+                Carrito carrito = (Carrito)Session["Carrito"];
                 if (carrito == null) return;
 
                 if (Session["usuario"] != null && chkGuardarDireccion.Checked)
