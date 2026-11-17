@@ -1,3 +1,5 @@
 <Solution>
+  <Project Path="dominio/dominio.csproj" Id="40e489fe-3b9d-47f1-bc0c-80208ba8639c" />
+  <Project Path="negocio/negocio.csproj" Id="bdc7413b-272f-41bb-8531-fe5e5a49fb75" />
   <Project Path="TPC-E-commerce-grupo-i/TPC-E-commerce-grupo-i.csproj" Id="a106ae8d-c1b0-48eb-a5e1-5663d54d1c9c" />
 </Solution>
