@@ -16,6 +16,9 @@ namespace dominio
         public string UrlImagenPerfil { get; set; }
         public bool Admin { get; set; }
 
+        // 🟢 PROPIEDAD CLAVE PARA LA BAJA LÓGICA Y FILTROS DE ESTADO
+        public bool Activo { get; set; } = true;
+
         public Usuario() { }
 
         // Constructor práctico para inicio de sesión o registro rápido
@@ -24,8 +27,7 @@ namespace dominio
             Email = email;
             Pass = pass;
             Admin = admin;
+            Activo = true;
         }
     }
 }
-
-
