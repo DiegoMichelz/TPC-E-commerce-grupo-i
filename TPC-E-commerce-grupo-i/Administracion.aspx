@@ -54,17 +54,29 @@
                                         <%# Eval("Categoria") != null ? Eval("Categoria.Descripcion") : "Sin Categoría" %>
                                     </ItemTemplate>
                                 </asp:TemplateField>
-
                                 <asp:TemplateField HeaderText="Acciones">
                                     <ItemTemplate>
-                                        <a href='<%# "FormularioArticulo.aspx?id=" + Eval("Id") %>' class="btn btn-sm btn-warning me-1">
-                                            ✏️ Modificar
+                                        <!-- Botón Modificar (siempre visible) -->
+                                        <a href='<%# "FormularioArticulo.aspx?id=" + Eval("Id") %>' class="btn btn-sm btn-warning me-1">✏️ Modificar
                                         </a>
-                                        <asp:LinkButton ID="btnEliminarGrilla" runat="server" 
-                                            CssClass="btn btn-sm btn-danger" 
-                                            CommandName="Eliminar" 
-                                            CommandArgument='<%# Eval("Id") %>'>
-                                            🗑️ Eliminar</asp:LinkButton>
+
+                                        <!-- Botón Inactivar: se muestra si el artículo está ACTIVO (True / 1) -->
+                                        <asp:LinkButton ID="btnEliminarGrilla" runat="server"
+                                            CssClass="btn btn-sm btn-danger me-1"
+                                            CommandName="Eliminar"
+                                            CommandArgument='<%# Eval("Id") %>'
+                                            Visible='<%# (bool)Eval("Activo") %>'>
+                                         🗑️ Inactivar
+                                         </asp:LinkButton>
+
+                                        <!-- Botón Reactivar: se muestra si el artículo está INACTIVO (False / 0) -->
+                                        <asp:LinkButton ID="btnReactivarGrilla" runat="server"
+                                            CssClass="btn btn-sm btn-success"
+                                            CommandName="Reactivar"
+                                            CommandArgument='<%# Eval("Id") %>'
+                                            Visible='<%# !(bool)Eval("Activo") %>'>
+                                       ♻️ Reactivar
+                                      </asp:LinkButton>
                                     </ItemTemplate>
                                 </asp:TemplateField>
                             </Columns>

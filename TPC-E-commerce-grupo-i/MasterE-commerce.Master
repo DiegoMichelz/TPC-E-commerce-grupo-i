@@ -24,7 +24,7 @@
                             <li class="nav-item"><a class="nav-link" href="~/Default.aspx#catalogo-seccion" runat="server">Catálogo</a></li>
                             <li class="nav-item"><a class="nav-link" href="~/Carrito.aspx" runat="server">Carrito</a></li>
                             
-                            <% if (Session["usuario"] != null && ((TPC_E_commerce_grupo_i.Models.Usuario)Session["usuario"]).Admin) { %>
+                            <% if (Session["usuario"] != null && ((dominio.Usuario)Session["usuario"]).Admin) { %>
                                 <li class="nav-item"><a class="nav-link text-warning fw-semibold" href="~/Administracion.aspx" runat="server">Administración</a></li>
                             <% } %>
                         </ul>
@@ -33,7 +33,7 @@
                         <div class="navbar-nav ms-auto align-items-center">
                             <% if (Session["usuario"] != null)
                                {
-                                   var user = (TPC_E_commerce_grupo_i.Models.Usuario)Session["usuario"];
+                                   var user = (dominio.Usuario)Session["usuario"];
                             %>
                                 <a href="MiPerfil.aspx" class="nav-link text-white fw-semibold small me-3">
                                     <i class="bi bi-person-circle text-info me-1"></i>Hola, <%: !string.IsNullOrEmpty(user.Nombre) ? user.Nombre : user.Email %> (Mi Perfil)

@@ -7,22 +7,24 @@ namespace negocio
 {
     public class ArticuloNegocio
     {
-        public List<Articulo> Listar()
+        public List<Articulo> Listar(bool soloActivos = true)
         {
             List<Articulo> lista = new List<Articulo>();
             AccesoDatos datos = new AccesoDatos();
             try
             {
                 string consulta = @"
-            SELECT 
-                A.Id, A.Codigo, A.Nombre, A.Descripcion, A.Precio,
-                M.Id AS IdMarca, M.Descripcion AS Marca,
-                C.Id AS IdCategoria, C.Descripcion AS Categoria
-            FROM Articulos A
-            LEFT JOIN Marcas M ON A.IdMarca = M.Id
-            LEFT JOIN Categorias C ON A.IdCategoria = C.Id
-            WHERE A.Activo = 1
-            ORDER BY A.Id ASC";
+                    SELECT 
+                        A.Id, A.Codigo, A.Nombre, A.Descripcion, A.Precio, A.Activo,
+                        M.Id AS IdMarca, M.Descripcion AS Marca,
+                        C.Id AS IdCategoria, C.Descripcion AS Categoria
+                    FROM Articulos A
+                    LEFT JOIN Marcas M ON A.IdMarca = M.Id
+                    LEFT JOIN Categorias C ON A.IdCategoria = C.Id";
+                if (soloActivos)
+                    consulta += " WHERE A.Activo = 1";
+
+                consulta += " ORDER BY A.Id ASC";
 
                 datos.setConsulta(consulta);
                 datos.ejecutarLectura();
@@ -35,7 +37,7 @@ namespace negocio
                     aux.Nombre = (string)datos.Lector["Nombre"];
                     aux.Descripcion = !(datos.Lector["Descripcion"] is DBNull) ? (string)datos.Lector["Descripcion"] : "";
                     aux.Precio = (decimal)datos.Lector["Precio"];
-
+                    aux.Activo = (bool)datos.Lector["Activo"];
                     // Cargar Marca
                     if (!(datos.Lector["IdMarca"] is DBNull))
                     {
@@ -199,5 +201,23 @@ namespace negocio
             }
         }
 
+        public void Reactivar(int id)
+        {
+            AccesoDatos datos = new AccesoDatos();
+            try
+            {
+                datos.setConsulta("UPDATE Articulos SET Activo = 1 WHERE Id = @id");
+                datos.setParametro("@id", id);
+                datos.ejecutarAccion();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                datos.cerrarConexion();
+            }
+        }
     }
 }

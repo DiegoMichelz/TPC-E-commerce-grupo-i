@@ -28,9 +28,9 @@ namespace TPC_E_commerce_grupo_i
             ArticuloNegocio negocio = new ArticuloNegocio();
             try
             {
-                List<Articulo> lista = negocio.Listar();
+                // Listamos tanto activos como inactivos para la administración
+                List<Articulo> lista = negocio.Listar(false);
 
-                // Guardamos en Session para la administración
                 Session["listaArticulosAdmin"] = lista;
 
                 dgvArticulos.DataSource = lista;
@@ -69,6 +69,21 @@ namespace TPC_E_commerce_grupo_i
             {
                 ViewState["IdArticuloEliminar"] = Convert.ToInt32(e.CommandArgument);
                 pnlConfirmarBaja.Visible = true;
+            }
+            else if (e.CommandName == "Reactivar")
+            {
+                try
+                {
+                    int idArticulo = Convert.ToInt32(e.CommandArgument);
+                    ArticuloNegocio negocio = new ArticuloNegocio();
+                    negocio.Reactivar(idArticulo);
+                    CargarGrilla();
+                }
+                catch (Exception ex)
+                {
+                    Session.Add("error", ex.ToString());
+                    Response.Redirect("Error.aspx", false);
+                }
             }
         }
 
