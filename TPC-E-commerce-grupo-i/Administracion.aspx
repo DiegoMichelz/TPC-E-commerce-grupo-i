@@ -8,7 +8,10 @@
         <div class="row">
             <div class="col-12 d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
                 <h2 class="mb-0">Panel de Administración de Artículos</h2>
-                <div class="d-flex gap-2">
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="PedidosAdmin.aspx" class="btn btn-dark">
+                        <i class="bi bi-box-seam me-1"></i>Gestionar Pedidos
+                    </a>
                     <a href="MarcasAdmin.aspx" class="btn btn-outline-dark">
                         <i class="bi bi-tags me-1"></i>Gestionar Marcas
                     </a>

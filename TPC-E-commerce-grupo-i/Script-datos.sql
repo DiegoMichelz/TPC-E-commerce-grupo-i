@@ -167,7 +167,7 @@ INSERT INTO FormasEntrega (Descripcion, Costo, Estado) VALUES
 GO
 
 INSERT INTO FormasPago (Descripcion, Estado) VALUES 
-('Efectivo / Transferencia', 1), ('Tarjeta de Crédito / Débito', 1);
+('Efectivo / Transferencia', 1), ('Tarjeta de Crédito / Débito', 2);
 GO
 
 -- C. Artículos (20 productos ordenados por ID estricto)

@@ -83,25 +83,23 @@
                     <h5 class="fw-bold text-dark mb-3"><i class="bi bi-credit-card text-primary me-2"></i>2. Seleccioná tu Medio de Pago</h5>
 
                     <div class="vstack gap-3">
+                        <!-- Opción Tarjeta (ID 2 en tu base) -->
                         <div class="form-check border p-3 rounded-3">
-                            <asp:RadioButton ID="rbTarjeta" runat="server" GroupName="MedioPago" Checked="true" CssClass="form-check-input" />
+                            <asp:RadioButton ID="rbTarjeta" runat="server" GroupName="MedioPago" Checked="true" AutoPostBack="true" OnCheckedChanged="MedioPago_CheckedChanged" CssClass="form-check-input" />
                             <label class="form-check-label fw-semibold text-dark ms-2" for="MainContent_rbTarjeta">
                                 Tarjeta de Crédito o Débito
+           
                                 <span class="d-block text-muted small fw-normal">Hasta 6 cuotas sin interés con bancos seleccionados.</span>
                             </label>
                         </div>
+
+                        <!-- Opción Transferencia (ID 1 en tu base, con 10% de descuento) -->
                         <div class="form-check border p-3 rounded-3">
-                            <asp:RadioButton ID="rbTransferencia" runat="server" GroupName="MedioPago" CssClass="form-check-input" />
+                            <asp:RadioButton ID="rbTransferencia" runat="server" GroupName="MedioPago" AutoPostBack="true" OnCheckedChanged="MedioPago_CheckedChanged" CssClass="form-check-input" />
                             <label class="form-check-label fw-semibold text-dark ms-2" for="MainContent_rbTransferencia">
-                                Transferencia Bancaria (Alias / CBU)
+                                Transferencia Bancaria / Efectivo
+           
                                 <span class="d-block text-success small fw-semibold">¡10% de descuento abonando por este medio!</span>
-                            </label>
-                        </div>
-                        <div class="form-check border p-3 rounded-3">
-                            <asp:RadioButton ID="rbEfectivo" runat="server" GroupName="MedioPago" CssClass="form-check-input" />
-                            <label class="form-check-label fw-semibold text-dark ms-2" for="MainContent_rbEfectivo">
-                                Pago Fácil / RapiPago
-                                <span class="d-block text-muted small fw-normal">Imprimís el ticket y abonás en cualquier sucursal habilitada.</span>
                             </label>
                         </div>
                     </div>

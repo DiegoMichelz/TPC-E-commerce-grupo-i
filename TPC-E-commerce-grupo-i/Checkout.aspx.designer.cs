@@ -150,15 +150,6 @@ namespace TPC_E_commerce_grupo_i
         protected global::System.Web.UI.WebControls.RadioButton rbTransferencia;
 
         /// <summary>
-        /// Control rbEfectivo.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RadioButton rbEfectivo;
-
-        /// <summary>
         /// Control lblSubtotal.
         /// </summary>
         /// <remarks>

@@ -11,18 +11,39 @@ namespace TPC_E_commerce_grupo_i
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            if (!IsPostBack)
+            {
+                if (Session["usuario"] != null)
+                {
+                    dominio.Usuario user = (dominio.Usuario)Session["usuario"];
 
+                    if (user.Admin)
+                    {
+                        // Si es ADMIN: Ocultamos menú de cliente y mostramos menú de administración
+                        pnlMenuCliente.Visible = false;
+                        pnlMenuAdmin.Visible = true;
+                    }
+                    else
+                    {
+                        // Si es CLIENTE COMÚN: Mostramos mis compras y ocultamos panel admin
+                        pnlMenuCliente.Visible = true;
+                        pnlMenuAdmin.Visible = false;
+                    }
+                }
+                else
+                {
+                    // Si NO está logueado: Ocultamos ambos
+                    pnlMenuCliente.Visible = false;
+                    pnlMenuAdmin.Visible = false;
+                }
+            }
         }
-
         protected void btnCerrarSesion_Click(object sender, EventArgs e)
         {
-            // Borramos la sesión del usuario actual
-            Session.Remove("usuario");
-
-            // Redirigimos al inicio
+            // Limpiamos la sesión y mandamos al usuario al inicio
+            Session.Clear();
+            Session.Abandon();
             Response.Redirect("Default.aspx", false);
         }
     }
-
-
 }

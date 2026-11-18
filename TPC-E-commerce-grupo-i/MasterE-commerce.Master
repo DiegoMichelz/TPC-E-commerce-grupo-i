@@ -24,9 +24,19 @@
                             <li class="nav-item"><a class="nav-link" href="~/Default.aspx#catalogo-seccion" runat="server">Catálogo</a></li>
                             <li class="nav-item"><a class="nav-link" href="~/Carrito.aspx" runat="server">Carrito</a></li>
                             
-                            <% if (Session["usuario"] != null && ((dominio.Usuario)Session["usuario"]).Admin) { %>
-                                <li class="nav-item"><a class="nav-link text-warning fw-semibold" href="~/Administracion.aspx" runat="server">Administración</a></li>
-                            <% } %>
+                            <!-- 👤 Menú visible solo para CLIENTES (No Administradores) -->
+                            <asp:PlaceHolder ID="pnlMenuCliente" runat="server">
+                                <li class="nav-item">
+                                    <a class="nav-link" href="MisCompras.aspx">Mis Compras</a>
+                                </li>
+                            </asp:PlaceHolder>
+
+                            <!-- 🛠️ Menú visible solo para ADMINISTRADORES -->
+                            <asp:PlaceHolder ID="pnlMenuAdmin" runat="server" Visible="false">
+                                <li class="nav-item">
+                                    <a class="nav-link text-warning fw-semibold" href="Administracion.aspx">Administración</a>
+                                </li>
+                            </asp:PlaceHolder>
                         </ul>
 
                         <!-- BLOQUE DE LOGIN / REGISTRO / PERFIL A LA DERECHA -->
