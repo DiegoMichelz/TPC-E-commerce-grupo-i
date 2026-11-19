@@ -128,6 +128,7 @@
     <Content Include="PedidosAdmin.aspx" />
     <Content Include="Registro.aspx" />
     <Content Include="Script-datos.sql" />
+    <Content Include="UsuarioAdmin.aspx" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -244,6 +245,13 @@
     </Compile>
     <Compile Include="Registro.aspx.designer.cs">
       <DependentUpon>Registro.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="UsuarioAdmin.aspx.cs">
+      <DependentUpon>UsuarioAdmin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="UsuarioAdmin.aspx.designer.cs">
+      <DependentUpon>UsuarioAdmin.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

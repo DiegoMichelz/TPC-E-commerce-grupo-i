@@ -10,7 +10,7 @@ GO
 USE ECommerceDB;
 GO
 
--- 0. ELIMINACI”N DE TABLAS SI YA EXISTEN (En orden inverso por las Foreign Keys)
+-- 0. ELIMINACI√ìN DE TABLAS SI YA EXISTEN (En orden inverso por las Foreign Keys)
 DROP TABLE IF EXISTS HistorialEstadoPedido;
 DROP TABLE IF EXISTS ItemsPedido;
 DROP TABLE IF EXISTS Imagenes;
@@ -25,7 +25,7 @@ DROP TABLE IF EXISTS Categorias;
 DROP TABLE IF EXISTS Marcas;
 GO
 
--- 1. TABLAS DE CAT¡LOGO
+-- 1. TABLAS DE CAT√ÅLOGO
 CREATE TABLE Marcas (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     Descripcion VARCHAR(50) NOT NULL
@@ -58,7 +58,7 @@ CREATE TABLE Imagenes (
 );
 GO
 
--- 2. TABLA DE USUARIOS Y AUTENTICACI”N (HITO 3)
+-- 2. TABLA DE USUARIOS Y AUTENTICACI√ìN (HITO 3 - INCLUYE CAMPO DE BAJA L√ìGICA)
 CREATE TABLE USERS (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     Email VARCHAR(100) NOT NULL UNIQUE,
@@ -66,11 +66,12 @@ CREATE TABLE USERS (
     Nombre VARCHAR(50) NULL,
     Apellido VARCHAR(50) NULL,
     UrlImagenPerfil VARCHAR(1000) NULL,
-    Admin BIT NOT NULL DEFAULT 0
+    Admin BIT NOT NULL DEFAULT 0,
+    Activo BIT NOT NULL DEFAULT 1  -- üëà Campo requerido para Baja L√≥gica / Reactivaci√≥n
 );
 GO
 
--- 3. TABLAS DE CLIENTES Y LOGÕSTICA
+-- 3. TABLAS DE CLIENTES Y LOG√çSTICA
 CREATE TABLE Clientes (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     Nombre VARCHAR(50) NOT NULL,
@@ -147,54 +148,54 @@ GO
 
 -- 5. DATOS INICIALES
 
--- A. Usuarios (1 Administrador y 1 Cliente normal por defecto)
-INSERT INTO USERS (Email, Pass, Nombre, Apellido, Admin) VALUES 
-('admin@admin.com', 'admin123', 'Admin', 'General', 1),
-('user@user.com', 'user123', 'Juan', 'PÈrez', 0);
+-- A. Usuarios (1 Administrador y 1 Cliente normal por defecto con Activo = 1)
+INSERT INTO USERS (Email, Pass, Nombre, Apellido, Admin, Activo) VALUES 
+('admin@admin.com', 'admin123', 'Admin', 'General', 1, 1),
+('user@user.com', 'user123', 'Juan', 'P√©rez', 0, 1);
 GO
 
--- B. Marcas y CategorÌas
+-- B. Marcas y Categor√≠as
 INSERT INTO Marcas (Descripcion) VALUES 
 ('Samsung'), ('Philips'), ('Logitech'), ('Xiaomi'), ('JBL');
 GO
 
 INSERT INTO Categorias (Descripcion) VALUES 
-('Audio & Gadgets'), ('PequeÒos Electro'), ('Inform·tica & Gaming'), ('Hogar Inteligente');
+('Audio & Gadgets'), ('Peque√±os Electro'), ('Inform√°tica & Gaming'), ('Hogar Inteligente');
 GO
 
 INSERT INTO FormasEntrega (Descripcion, Costo, Estado) VALUES 
-('Retiro en Local', 0.00, 1), ('EnvÌo a Domicilio', 2500.00, 1);
+('Retiro en Local', 0.00, 1), ('Env√≠o a Domicilio', 2500.00, 1);
 GO
 
 INSERT INTO FormasPago (Descripcion, Estado) VALUES 
-('Efectivo / Transferencia', 1), ('Tarjeta de CrÈdito / DÈbito', 2);
+('Efectivo / Transferencia', 1), ('Tarjeta de Cr√©dito / D√©bito', 2);
 GO
 
--- C. ArtÌculos (20 productos ordenados por ID estricto)
+-- C. Art√≠culos (20 productos ordenados por ID estricto)
 INSERT INTO Articulos (Codigo, Nombre, Descripcion, Precio, Stock, IdMarca, IdCategoria, Activo) VALUES 
-('ART001', 'Auriculares Inal·mbricos', 'Auriculares Bluetooth con cancelaciÛn de ruido', 35000.00, 15, 5, 1, 1),
-('ART002', 'Parlante Bluetooth Port·til', 'Parlante resistente al agua IPX7', 28000.00, 20, 5, 1, 1),
-('ART003', 'Smartwatch Deportivo', 'Reloj inteligente con monitor de ritmo cardÌaco', 49000.00, 12, 4, 1, 1),
-('ART004', 'Auriculares de Diadema', 'Sonido estÈreo de alta fidelidad con micrÛfono', 22000.00, 18, 2, 1, 1),
-('ART005', 'Power Bank 10000mAh', 'Cargador port·til con carga r·pida USB-C', 19000.00, 25, 4, 1, 1),
-('ART006', 'Cafetera Espresso', 'Cafetera autom·tica con espumador de leche', 120000.00, 5, 2, 2, 1),
+('ART001', 'Auriculares Inal√°mbricos', 'Auriculares Bluetooth con cancelaci√≥n de ruido', 35000.00, 15, 5, 1, 1),
+('ART002', 'Parlante Bluetooth Port√°til', 'Parlante resistente al agua IPX7', 28000.00, 20, 5, 1, 1),
+('ART003', 'Smartwatch Deportivo', 'Reloj inteligente con monitor de ritmo card√≠aco', 49000.00, 12, 4, 1, 1),
+('ART004', 'Auriculares de Diadema', 'Sonido est√©reo de alta fidelidad con micr√≥fono', 22000.00, 18, 2, 1, 1),
+('ART005', 'Power Bank 10000mAh', 'Cargador port√°til con carga r√°pida USB-C', 19000.00, 25, 4, 1, 1),
+('ART006', 'Cafetera Espresso', 'Cafetera autom√°tica con espumador de leche', 120000.00, 5, 2, 2, 1),
 ('ART007', 'Licuadora de Mano', 'Licuadora de acero inoxidable 600W', 55000.00, 10, 2, 2, 1),
-('ART008', 'Tostadora ElÈctrica', 'Ranura doble con niveles de tostado ajustables', 32000.00, 14, 2, 2, 1),
-('ART009', 'Pava ElÈctrica Digital', 'Control de temperatura y corte autom·tico', 41000.00, 16, 2, 2, 1),
-('ART010', 'Batidora de Pedestal', 'Bowl de acero y m˙ltiples velocidades', 89000.00, 8, 2, 2, 1),
-('ART011', 'Teclado Mec·nico RGB', 'Teclado mec·nico switch red en espaÒol', 45000.00, 10, 3, 3, 1),
-('ART012', 'Mouse Gamer', 'Mouse Ûptico con 6 botones programables', 18000.00, 25, 3, 3, 1),
+('ART008', 'Tostadora El√©ctrica', 'Ranura doble con niveles de tostado ajustables', 32000.00, 14, 2, 2, 1),
+('ART009', 'Pava El√©ctrica Digital', 'Control de temperatura y corte autom√°tico', 41000.00, 16, 2, 2, 1),
+('ART010', 'Batidora de Pedestal', 'Bowl de acero y m√∫ltiples velocidades', 89000.00, 8, 2, 2, 1),
+('ART011', 'Teclado Mec√°nico RGB', 'Teclado mec√°nico switch red en espa√±ol', 45000.00, 10, 3, 3, 1),
+('ART012', 'Mouse Gamer', 'Mouse √≥ptico con 6 botones programables', 18000.00, 25, 3, 3, 1),
 ('ART013', 'Monitor 24 pulgadas Full HD', 'Monitor LED IPS 75Hz con puerto HDMI', 185000.00, 6, 1, 3, 1),
 ('ART014', 'Notebook Office 15.6', 'Procesador Core i3, 8GB RAM, SSD 256GB', 350000.00, 4, 1, 3, 1),
-('ART015', 'Pendrive 64GB USB 3.0', 'Memoria port·til de alta velocidad', 9500.00, 30, 3, 3, 1),
+('ART015', 'Pendrive 64GB USB 3.0', 'Memoria port√°til de alta velocidad', 9500.00, 30, 3, 3, 1),
 ('ART016', 'Foco LED Smart RGB', 'Bombilla inteligente compatible con asistentes de voz', 12000.00, 40, 4, 4, 1),
-('ART017', 'C·mara de Seguridad Wi-Fi', 'C·mara de vigilancia 1080p con visiÛn nocturna', 42000.00, 11, 4, 4, 1),
-('ART018', 'Enchufe Inteligente Wi-Fi', 'Controla tus electrodomÈsticos desde el celular', 15000.00, 22, 4, 4, 1),
+('ART017', 'C√°mara de Seguridad Wi-Fi', 'C√°mara de vigilancia 1080p con visi√≥n nocturna', 42000.00, 11, 4, 4, 1),
+('ART018', 'Enchufe Inteligente Wi-Fi', 'Controla tus electrodom√©sticos desde el celular', 15000.00, 22, 4, 4, 1),
 ('ART019', 'Tira LED RGB Smart', '5 metros de luces multicolores con app', 21000.00, 19, 4, 4, 1),
-('ART020', 'Sensor de Movimiento Inal·mbrico', 'Notificaciones de alerta en tiempo real', 18500.00, 15, 4, 4, 1);
+('ART020', 'Sensor de Movimiento Inal√°mbrico', 'Notificaciones de alerta en tiempo real', 18500.00, 15, 4, 4, 1);
 GO
 
--- D. Im·genes por ArtÌculo
+-- D. Im√°genes por Art√≠culo
 INSERT INTO Imagenes (IdArticulo, ImagenUrl) VALUES 
 (1, 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&q=80'),
 (1, 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=500&q=80'),

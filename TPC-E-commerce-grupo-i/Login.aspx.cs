@@ -63,7 +63,7 @@ namespace TPC_E_commerce_grupo_i
                     //Session.Add("error", "Email o contraseña incorrectos.");
                     //Response.Redirect("Error.aspx", false);
                     lblMensajeError.Text = "Email o contraseña incorrectos.";
-                    lblMensajeError.Visible = true; 
+                    lblMensajeError.Visible = true;
                 }
             }
             catch (Exception ex)
@@ -71,7 +71,10 @@ namespace TPC_E_commerce_grupo_i
                 //Session.Add("error", ex.ToString());
                 //Response.Redirect("Error.aspx", false);
                 // Si ocurre cualquier excepción en la base de datos:
-                lblMensajeError.Text = "Usuario o contraseña incorrectos.";
+                //lblMensajeError.Text = "Usuario o contraseña incorrectos.";
+                //lblMensajeError.Visible = true;
+
+                lblMensajeError.Text = "Error real: " + ex.Message;
                 lblMensajeError.Visible = true;
             }
         }
