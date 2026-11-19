@@ -40,6 +40,25 @@
             </div>
         </div>
 
+        <!-- Panel de Detalle del Usuario Seleccionado -->
+        <asp:Panel ID="pnlDetalleUsuario" runat="server" Visible="false" CssClass="card shadow-sm mb-3 border-info">
+            <div class="card-header bg-info text-dark d-flex justify-content-between align-items-center">
+                <strong><i class="bi bi-person-lines-fill me-1"></i>Detalle del Usuario</strong>
+                <asp:LinkButton ID="btnCerrarDetalle" runat="server" CssClass="btn btn-sm btn-outline-dark" OnClick="btnCerrarDetalle_Click">
+                    Cerrar ✕
+                </asp:LinkButton>
+            </div>
+            <div class="card-body">
+                <div class="row g-2">
+                    <div class="col-md-4"><strong>Nombre y Apellido:</strong> <asp:Label ID="lblDetNombre" runat="server" /></div>
+                    <div class="col-md-4"><strong>Email:</strong> <asp:Label ID="lblDetEmail" runat="server" /></div>
+                    <div class="col-md-4"><strong>Rol / Estado:</strong> <asp:Label ID="lblDetRolEstado" runat="server" /></div>
+                    <div class="col-md-4"><strong>Teléfono:</strong> <asp:Label ID="lblDetTelefono" runat="server" /></div>
+                    <div class="col-md-8"><strong>Dirección:</strong> <asp:Label ID="lblDetDireccion" runat="server" /></div>
+                </div>
+            </div>
+        </asp:Panel>
+
         <!-- Grilla de Usuarios -->
         <div class="row">
             <div class="col-12">
@@ -67,6 +86,13 @@
 
                                 <asp:TemplateField HeaderText="Acciones">
                                     <ItemTemplate>
+                                        <!-- Ver Detalle -->
+                                        <asp:LinkButton ID="btnVerDetalle" runat="server"
+                                            CssClass="btn btn-sm btn-info text-dark me-1"
+                                            CommandName="VerDetalle" CommandArgument='<%# Eval("Id") %>'>
+                                            👁️ Detalle
+                                        </asp:LinkButton>
+
                                         <!-- Modificar Usuario -->
                                         <asp:LinkButton ID="btnModificar" runat="server"
                                             CssClass="btn btn-sm btn-warning me-1"

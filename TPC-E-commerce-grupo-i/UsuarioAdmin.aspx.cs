@@ -35,6 +35,7 @@ namespace TPC_E_commerce_grupo_i
 
         protected void ddlFiltroEstado_SelectedIndexChanged(object sender, EventArgs e)
         {
+            pnlDetalleUsuario.Visible = false;
             CargarGrilla();
         }
 
@@ -43,6 +44,12 @@ namespace TPC_E_commerce_grupo_i
             if (e.CommandArgument == null) return;
 
             int idUsuario = Convert.ToInt32(e.CommandArgument);
+
+            if (e.CommandName == "VerDetalle")
+            {
+                MostrarDetalleUsuario(idUsuario);
+                return;
+            }
 
             if (e.CommandName == "Modificar")
             {
@@ -72,6 +79,44 @@ namespace TPC_E_commerce_grupo_i
                     CargarGrilla();
                 }
             }
+        }
+
+        private void MostrarDetalleUsuario(int idUsuario)
+        {
+            UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
+            Usuario seleccionado = usuarioNegocio.Listar("TODOS").Find(u => u.Id == idUsuario);
+            if (seleccionado == null) return;
+
+            string nombreCompleto = $"{seleccionado.Nombre} {seleccionado.Apellido}".Trim();
+            lblDetNombre.Text = string.IsNullOrWhiteSpace(nombreCompleto) ? "(Sin nombre)" : nombreCompleto;
+            lblDetEmail.Text = seleccionado.Email;
+            lblDetRolEstado.Text = (seleccionado.Admin ? "Administrador" : "Comprador") + " / " + (seleccionado.Activo ? "Activo" : "Inactivo");
+
+            ClienteNegocio clienteNegocio = new ClienteNegocio();
+            Cliente cli = clienteNegocio.BuscarPorEmail(seleccionado.Email);
+            lblDetTelefono.Text = (cli != null && !string.IsNullOrWhiteSpace(cli.Telefono)) ? cli.Telefono : "No registrado";
+
+            DireccionNegocio direccionNegocio = new DireccionNegocio();
+            Direccion dir = direccionNegocio.ObtenerPorEmail(seleccionado.Email);
+            if (dir != null)
+            {
+                string pisoDepto = "";
+                if (!string.IsNullOrWhiteSpace(dir.Piso)) pisoDepto += $" Piso {dir.Piso}";
+                if (!string.IsNullOrWhiteSpace(dir.Departamento)) pisoDepto += $" Depto {dir.Departamento}";
+
+                lblDetDireccion.Text = $"{dir.Calle} {dir.Numero}{pisoDepto} - CP {dir.CodigoPostal}, {dir.Localidad}, {dir.Provincia}";
+            }
+            else
+            {
+                lblDetDireccion.Text = seleccionado.Admin ? "No aplica (Administrador)" : "Sin dirección registrada";
+            }
+
+            pnlDetalleUsuario.Visible = true;
+        }
+
+        protected void btnCerrarDetalle_Click(object sender, EventArgs e)
+        {
+            pnlDetalleUsuario.Visible = false;
         }
     }
 }
