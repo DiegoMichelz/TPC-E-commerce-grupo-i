@@ -43,6 +43,13 @@ namespace TPC_E_commerce_grupo_i
             if (e.CommandArgument == null) return;
 
             int idUsuario = Convert.ToInt32(e.CommandArgument);
+
+            if (e.CommandName == "Modificar")
+            {
+                Response.Redirect("FormularioUsuario.aspx?id=" + idUsuario, false);
+                return;
+            }
+
             UsuarioNegocio negocio = new UsuarioNegocio();
 
             if (e.CommandName == "Inactivar")

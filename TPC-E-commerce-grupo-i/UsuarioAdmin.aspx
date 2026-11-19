@@ -20,9 +20,9 @@
             </div>
         </div>
 
-        <!-- Panel de Filtro por Estado -->
+        <!-- Panel de Filtro por Estado y Alta de Usuario -->
         <div class="card shadow-sm mb-3">
-            <div class="card-body py-2 d-flex align-items-center justify-content-between">
+            <div class="card-body py-2 d-flex flex-wrap align-items-center justify-content-between gap-2">
                 <div class="d-flex align-items-center gap-2">
                     <label class="fw-semibold small mb-0">Filtrar por Estado:</label>
                     <asp:DropDownList ID="ddlFiltroEstado" runat="server" CssClass="form-select form-select-sm w-auto" AutoPostBack="true" OnSelectedIndexChanged="ddlFiltroEstado_SelectedIndexChanged">
@@ -30,6 +30,12 @@
                         <asp:ListItem Text="Solo Inactivos / Bloqueados" Value="INACTIVOS" />
                         <asp:ListItem Text="Todos los Usuarios" Value="TODOS" />
                     </asp:DropDownList>
+                </div>
+
+                <div>
+                    <a href="FormularioUsuario.aspx" class="btn btn-sm btn-primary">
+                        <i class="bi bi-person-plus me-1"></i>Nuevo usuario
+                    </a>
                 </div>
             </div>
         </div>
@@ -61,6 +67,13 @@
 
                                 <asp:TemplateField HeaderText="Acciones">
                                     <ItemTemplate>
+                                        <!-- Modificar Usuario -->
+                                        <asp:LinkButton ID="btnModificar" runat="server"
+                                            CssClass="btn btn-sm btn-warning me-1"
+                                            CommandName="Modificar" CommandArgument='<%# Eval("Id") %>'>
+                                            ✏️ Modificar
+                                        </asp:LinkButton>
+
                                         <!-- Promoción / Reversión de Rol Admin -->
                                         <asp:LinkButton ID="btnToggleAdmin" runat="server" 
                                             CssClass='<%# (bool)Eval("Admin") ? "btn btn-sm btn-outline-secondary me-1" : "btn btn-sm btn-outline-primary me-1" %>'
