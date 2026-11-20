@@ -82,5 +82,10 @@ namespace TPC_E_commerce_grupo_i
                 }
             }
         }
+        protected void btnComprarAhora_Click(object sender, EventArgs e)
+        {
+            btnAgregarCarrito_Click(sender, e);
+            Response.Redirect("Checkout.aspx", false);
+        }
     }
 }

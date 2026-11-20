@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Gestión de Usuarios" Language="C#" MasterPageFile="~/MasterE-commerce.Master" AutoEventWireup="true" CodeBehind="UsuariosAdmin.aspx.cs" Inherits="TPC_E_commerce_grupo_i.UsuariosAdmin" %>
+﻿<%@ Page Title="Gestión de Usuarios" Language="C#" MasterPageFile="~/MasterE-commerce.Master" AutoEventWireup="true" CodeBehind="UsuarioAdmin.aspx.cs" Inherits="TPC_E_commerce_grupo_i.UsuariosAdmin" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>
@@ -39,6 +39,18 @@
                 </div>
             </div>
         </div>
+
+        <!-- Panel de Confirmación de Bloqueo Bootstrap -->
+        <asp:Panel ID="pnlConfirmarBloqueo" runat="server" Visible="false" CssClass="alert alert-warning border-warning d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <strong>¿Está seguro de que desea bloquear al usuario <asp:Label ID="lblUsuarioBloquear" runat="server" CssClass="text-decoration-underline"></asp:Label>?</strong>
+            </div>
+            <div>
+                <asp:Button ID="btnConfirmarBloqueo" runat="server" Text="Sí, bloquear" CssClass="btn btn-danger btn-sm me-2" OnClick="btnConfirmarBloqueo_Click" />
+                <asp:Button ID="btnCancelarBloqueo" runat="server" Text="Cancelar" CssClass="btn btn-outline-secondary btn-sm" OnClick="btnCancelarBloqueo_Click" />
+            </div>
+        </asp:Panel>
 
         <!-- Panel de Detalle del Usuario Seleccionado -->
         <asp:Panel ID="pnlDetalleUsuario" runat="server" Visible="false" CssClass="card shadow-sm mb-3 border-info">

@@ -36,6 +36,7 @@ namespace TPC_E_commerce_grupo_i
         protected void ddlFiltroEstado_SelectedIndexChanged(object sender, EventArgs e)
         {
             pnlDetalleUsuario.Visible = false;
+            pnlConfirmarBloqueo.Visible = false;
             CargarGrilla();
         }
 
@@ -47,6 +48,7 @@ namespace TPC_E_commerce_grupo_i
 
             if (e.CommandName == "VerDetalle")
             {
+                pnlConfirmarBloqueo.Visible = false;
                 MostrarDetalleUsuario(idUsuario);
                 return;
             }
@@ -61,16 +63,23 @@ namespace TPC_E_commerce_grupo_i
 
             if (e.CommandName == "Inactivar")
             {
-                negocio.CambiarEstado(idUsuario, false);
-                CargarGrilla();
+                pnlDetalleUsuario.Visible = false;
+                ViewState["IdUsuarioBloquear"] = idUsuario;
+
+                Usuario seleccionado = negocio.Listar("TODOS").Find(u => u.Id == idUsuario);
+                lblUsuarioBloquear.Text = seleccionado != null ? seleccionado.Email : ("ID #" + idUsuario);
+
+                pnlConfirmarBloqueo.Visible = true;
             }
             else if (e.CommandName == "Reactivar")
             {
+                pnlConfirmarBloqueo.Visible = false;
                 negocio.CambiarEstado(idUsuario, true);
                 CargarGrilla();
             }
             else if (e.CommandName == "ToggleAdmin")
             {
+                pnlConfirmarBloqueo.Visible = false;
                 List<Usuario> lista = negocio.Listar("TODOS");
                 Usuario seleccionado = lista.Find(u => u.Id == idUsuario);
                 if (seleccionado != null)
@@ -79,6 +88,26 @@ namespace TPC_E_commerce_grupo_i
                     CargarGrilla();
                 }
             }
+        }
+
+        protected void btnConfirmarBloqueo_Click(object sender, EventArgs e)
+        {
+            if (ViewState["IdUsuarioBloquear"] != null)
+            {
+                int idUsuario = (int)ViewState["IdUsuarioBloquear"];
+                UsuarioNegocio negocio = new UsuarioNegocio();
+                negocio.CambiarEstado(idUsuario, false);
+
+                ViewState["IdUsuarioBloquear"] = null;
+                pnlConfirmarBloqueo.Visible = false;
+                CargarGrilla();
+            }
+        }
+
+        protected void btnCancelarBloqueo_Click(object sender, EventArgs e)
+        {
+            ViewState["IdUsuarioBloquear"] = null;
+            pnlConfirmarBloqueo.Visible = false;
         }
 
         private void MostrarDetalleUsuario(int idUsuario)

@@ -90,10 +90,9 @@
                     <div class="d-grid gap-2 mb-3">
                         <asp:Button ID="btnAgregarCarrito" runat="server" Text="🛒 Agregar al Carrito" 
                             CssClass="btn btn-primary btn-lg py-3 fw-bold shadow-sm w-100" OnClick="btnAgregarCarrito_Click" />
-                            
-                        <button type="button" class="btn btn-outline-dark btn-lg py-3 fw-semibold">
+                        <asp:LinkButton ID="btnComprarAhora" runat="server" CssClass="btn btn-outline-dark btn-lg py-3 fw-semibold" OnClick="btnComprarAhora_Click">
                             <i class="bi bi-lightning-fill text-warning me-2"></i><span class="text-dark">Comprar Ahora</span>
-                        </button>
+                        </asp:LinkButton>
                     </div>
 
                     <!-- Garantías rápidas -->
