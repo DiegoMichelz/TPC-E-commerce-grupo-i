@@ -22,25 +22,58 @@ namespace TPC_E_commerce_grupo_i
 
         protected void btnRegistrarse_Click(object sender, EventArgs e)
         {
-            Usuario nuevo = new Usuario();
-            UsuarioNegocio negocio = new UsuarioNegocio();
-
             try
             {
-                nuevo.Email = txtEmail.Text;
-                nuevo.Pass = txtPassword.Text;
-                nuevo.Nombre = txtNombre.Text;
-                nuevo.Apellido = txtApellido.Text;
-                nuevo.Admin = false; // Por defecto se registra como cliente común
+                lblError.Visible = false;
 
-                // Usamos el método de Nahuel que hace el INSERT y devuelve el ID generado
+                if (!Validacion.EsEmailValido(txtEmail))
+                {
+                    lblError.Text = "Ingresá un correo electrónico válido.";
+                    lblError.Visible = true;
+                    return;
+                }
+
+                if (Validacion.EstaVacio(txtPassword) || txtPassword.Text.Trim().Length < 4)
+                {
+                    lblError.Text = "La contraseña debe tener al menos 4 caracteres.";
+                    lblError.Visible = true;
+                    return;
+                }
+
+                if (Validacion.EstaVacio(txtNombre) || Validacion.EstaVacio(txtApellido))
+                {
+                    lblError.Text = "Nombre y apellido son obligatorios.";
+                    lblError.Visible = true;
+                    return;
+                }
+
+                string emailLimpio = txtEmail.Text.Trim();
+                UsuarioNegocio negocio = new UsuarioNegocio();
+
+                // Validar que el correo no esté registrado previamente
+                bool emailExistente = negocio.Listar().Exists(x =>
+                    x.Email != null &&
+                    x.Email.Trim().Equals(emailLimpio, StringComparison.OrdinalIgnoreCase));
+
+                if (emailExistente)
+                {
+                    lblError.Text = "Ya existe una cuenta registrada con ese correo electrónico.";
+                    lblError.Visible = true;
+                    return;
+                }
+
+                Usuario nuevo = new Usuario();
+                nuevo.Email = emailLimpio;
+                nuevo.Pass = txtPassword.Text;
+                nuevo.Nombre = txtNombre.Text.Trim();
+                nuevo.Apellido = txtApellido.Text.Trim();
+                nuevo.Admin = false;
+                nuevo.Activo = true;
+
                 int idGenerado = negocio.Registrar(nuevo);
                 nuevo.Id = idGenerado;
 
-                // De regalo, lo dejamos logueado automáticamente en la sesión
                 Session["usuario"] = nuevo;
-
-                // Lo mandamos al catálogo o a una pantalla de éxito
                 Response.Redirect("Default.aspx", false);
             }
             catch (Exception ex)

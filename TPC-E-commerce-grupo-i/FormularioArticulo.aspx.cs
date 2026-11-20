@@ -21,6 +21,7 @@ namespace TPC_E_commerce_grupo_i
         protected global::System.Web.UI.WebControls.Button btnGuardar;
         protected global::System.Web.UI.WebControls.Button btnEliminar;
         protected global::System.Web.UI.WebControls.Panel pnlConfirmarBaja;
+        protected global::System.Web.UI.WebControls.Label lblError;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -92,13 +93,68 @@ namespace TPC_E_commerce_grupo_i
         {
             try
             {
+                lblError.Visible = false;
+
+                if (Validacion.EstaVacio(txtCodigo) || Validacion.EstaVacio(txtNombre))
+                {
+                    lblError.Text = "El código y el nombre del producto son obligatorios.";
+                    lblError.Visible = true;
+                    return;
+                }
+
+                if (!Validacion.EsPrecioValido(txtPrecio, out decimal precio))
+                {
+                    lblError.Text = "Ingresá un precio numérico válido mayor a 0.";
+                    lblError.Visible = true;
+                    return;
+                }
+
+                if (!Validacion.EsEnteroNoNegativo(txtStock, out int stock))
+                {
+                    lblError.Text = "El stock debe ser un número entero igual o mayor a 0.";
+                    lblError.Visible = true;
+                    return;
+                }
+
+                if (!Validacion.TieneSeleccion(ddlMarca) || !Validacion.TieneSeleccion(ddlCategoria))
+                {
+                    lblError.Text = "Seleccioná una marca y una categoría válidas.";
+                    lblError.Visible = true;
+                    return;
+                }
+
+                if (!Validacion.EsUrlOpcionalValida(txtImagenUrl))
+                {
+                    lblError.Text = "La URL de la imagen debe comenzar con http:// o https://.";
+                    lblError.Visible = true;
+                    return;
+                }
+
+                int idActual = int.Parse(hfIdArticulo.Value);
+                string codigoIngresado = txtCodigo.Text.Trim();
+
+                ArticuloNegocio negocio = new ArticuloNegocio();
+
+                // Validar código duplicado (excluyendo el propio artículo si estamos editando)
+                bool codigoDuplicado = negocio.Listar().Exists(x =>
+                    x.Codigo != null &&
+                    x.Codigo.Trim().Equals(codigoIngresado, StringComparison.OrdinalIgnoreCase) &&
+                    x.Id != idActual);
+
+                if (codigoDuplicado)
+                {
+                    lblError.Text = $"Ya existe otro artículo registrado con el código '{codigoIngresado}'.";
+                    lblError.Visible = true;
+                    return;
+                }
+
                 Articulo nuevo = new Articulo();
-                nuevo.Id = int.Parse(hfIdArticulo.Value);
-                nuevo.Codigo = txtCodigo.Text.Trim();
+                nuevo.Id = idActual;
+                nuevo.Codigo = codigoIngresado;
                 nuevo.Nombre = txtNombre.Text.Trim();
                 nuevo.Descripcion = txtDescripcion.Text.Trim();
-                nuevo.Precio = decimal.Parse(txtPrecio.Text.Replace('.', ','));
-                nuevo.Stock = int.Parse(txtStock.Text);
+                nuevo.Precio = precio;
+                nuevo.Stock = stock;
 
                 nuevo.Marca = new Marca { Id = int.Parse(ddlMarca.SelectedValue) };
                 nuevo.Categoria = new Categoria { Id = int.Parse(ddlCategoria.SelectedValue) };
@@ -108,16 +164,10 @@ namespace TPC_E_commerce_grupo_i
                     nuevo.ImagenesUrl = new List<string> { txtImagenUrl.Text.Trim() };
                 }
 
-                ArticuloNegocio negocio = new ArticuloNegocio();
-
                 if (nuevo.Id == 0)
-                {
                     negocio.Agregar(nuevo);
-                }
                 else
-                {
                     negocio.Modificar(nuevo);
-                }
 
                 Response.Redirect("Administracion.aspx", false);
             }

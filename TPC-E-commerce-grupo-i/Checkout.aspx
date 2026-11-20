@@ -6,6 +6,7 @@
 
         <!-- Título de Sección -->
         <div class="mb-4">
+            <asp:Label ID="lblError" runat="server" CssClass="alert alert-danger d-block mb-4" Visible="false" />
             <h1 class="h3 fw-bold text-dark mb-1"><i class="bi bi-shield-lock text-primary me-2"></i>Finalizar Compra</h1>
             <p class="text-muted small">Completá tus datos de envío y pago para confirmar el pedido en NovaStore.</p>
         </div>

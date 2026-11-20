@@ -132,32 +132,52 @@ namespace TPC_E_commerce_grupo_i
             bool esAdmin = ddlRol.SelectedValue == "1";
             bool activo = chkActivo.Checked;
 
-            // Validaciones obligatorias según base de datos
-            if (string.IsNullOrWhiteSpace(email))
+            // 1. Validaciones con Validacion.cs
+            if (!Validacion.EsEmailValido(txtEmail))
             {
-                MostrarError("El campo Email es obligatorio.");
+                MostrarError("Ingresá un correo electrónico válido.");
                 return;
             }
 
-            if (IdUsuarioEditar == 0 && string.IsNullOrWhiteSpace(passIngresada))
+            if (IdUsuarioEditar == 0 && (Validacion.EstaVacio(txtPass) || passIngresada.Length < 4))
             {
-                MostrarError("El campo Contraseña es obligatorio para un nuevo usuario.");
+                MostrarError("La contraseña es obligatoria y debe tener al menos 4 caracteres.");
+                return;
+            }
+
+            if (IdUsuarioEditar > 0 && !Validacion.EstaVacio(txtPass) && passIngresada.Length < 4)
+            {
+                MostrarError("La nueva contraseña debe tener al menos 4 caracteres.");
+                return;
+            }
+
+            if (!Validacion.EsUrlOpcionalValida(txtUrlImagen))
+            {
+                MostrarError("La URL de imagen de perfil debe comenzar con http:// o https://.");
+                return;
+            }
+
+            // 2. Evitar que el admin logueado se desactive o se quite permisos a sí mismo
+            Usuario adminLogueado = Session["usuario"] as Usuario;
+            if (adminLogueado != null && adminLogueado.Id == IdUsuarioEditar && (!esAdmin || !activo))
+            {
+                MostrarError("No podés desactivar tu propia cuenta ni quitarte el rol de Administrador.");
                 return;
             }
 
             if (!esAdmin)
             {
-                if (string.IsNullOrWhiteSpace(nombre) || string.IsNullOrWhiteSpace(apellido))
+                if (Validacion.EstaVacio(txtNombre) || Validacion.EstaVacio(txtApellido))
                 {
                     MostrarError("Para un comprador/cliente, Nombre y Apellido son obligatorios.");
                     return;
                 }
 
-                if (string.IsNullOrWhiteSpace(txtCalle.Text) ||
-                    string.IsNullOrWhiteSpace(txtNumero.Text) ||
-                    string.IsNullOrWhiteSpace(txtCodigoPostal.Text) ||
-                    string.IsNullOrWhiteSpace(txtLocalidad.Text) ||
-                    string.IsNullOrWhiteSpace(txtProvincia.Text))
+                if (Validacion.EstaVacio(txtCalle) ||
+                    Validacion.EstaVacio(txtNumero) ||
+                    Validacion.EstaVacio(txtCodigoPostal) ||
+                    Validacion.EstaVacio(txtLocalidad) ||
+                    Validacion.EstaVacio(txtProvincia))
                 {
                     MostrarError("Completá los campos obligatorios de dirección (Calle, Número, Código Postal, Localidad y Provincia).");
                     return;
@@ -169,16 +189,17 @@ namespace TPC_E_commerce_grupo_i
                 UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
                 string passFinal = !string.IsNullOrWhiteSpace(passIngresada) ? passIngresada : PassActual;
 
+                // 3. Validar email duplicado tanto en Alta como en Edición
+                Usuario existente = usuarioNegocio.Listar("TODOS").Find(u =>
+                    u.Email.Equals(email, StringComparison.OrdinalIgnoreCase) && u.Id != IdUsuarioEditar);
+                if (existente != null)
+                {
+                    MostrarError("Ya existe otro usuario registrado con ese correo electrónico.");
+                    return;
+                }
+
                 if (IdUsuarioEditar == 0)
                 {
-                    // Validar email duplicado en USERS
-                    Usuario existente = usuarioNegocio.Listar("TODOS").Find(u => u.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
-                    if (existente != null)
-                    {
-                        MostrarError("Ya existe un usuario registrado con ese correo electrónico.");
-                        return;
-                    }
-
                     Usuario nuevo = new Usuario
                     {
                         Email = email,
@@ -219,6 +240,21 @@ namespace TPC_E_commerce_grupo_i
                     usuarioNegocio.Actualizar(editado);
                     usuarioNegocio.CambiarRol(IdUsuarioEditar, esAdmin);
                     usuarioNegocio.CambiarEstado(IdUsuarioEditar, activo);
+
+                    // Actualizar Email y Pass en USERS por si fueron modificados desde Admin
+                    AccesoDatos datosUser = new AccesoDatos();
+                    try
+                    {
+                        datosUser.setConsulta("UPDATE USERS SET Email = @email, Pass = @pass WHERE Id = @id");
+                        datosUser.setParametro("@email", email);
+                        datosUser.setParametro("@pass", passFinal);
+                        datosUser.setParametro("@id", IdUsuarioEditar);
+                        datosUser.ejecutarAccion();
+                    }
+                    finally
+                    {
+                        datosUser.cerrarConexion();
+                    }
 
                     if (!esAdmin)
                     {

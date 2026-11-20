@@ -95,13 +95,50 @@ namespace TPC_E_commerce_grupo_i
         }
 
         protected void btnConfirmar_Click(object sender, EventArgs e)
-
         {
             try
             {
-                // ✅ Se quita el prefijo 'Models.' para usar directamente la clase de 'dominio'
-                dominio.Carrito carrito = (dominio.Carrito)Session["Carrito"];
-                if (carrito == null) return;
+                lblError.Visible = false;
+
+                dominio.Carrito carrito = Session["Carrito"] as dominio.Carrito;
+                if (carrito == null || carrito.Items == null || carrito.Items.Count == 0)
+                {
+                    Response.Redirect("Default.aspx", false);
+                    return;
+                }
+
+                // 1. Validar datos obligatorios de contacto y envío (Piso/Depto queda opcional)
+                if (!Validacion.EsEmailValido(txtEmail))
+                {
+                    lblError.Text = "Ingresá un correo electrónico válido para enviar la factura.";
+                    lblError.Visible = true;
+                    return;
+                }
+
+                if (Validacion.EstaVacio(txtNombre) || Validacion.EstaVacio(txtApellido) ||
+                    Validacion.EstaVacio(txtDireccion) || Validacion.EstaVacio(txtLocalidad) ||
+                    Validacion.EstaVacio(txtProvincia) || Validacion.EstaVacio(txtCP))
+                {
+                    lblError.Text = "Completá todos los datos obligatorios de envío (Nombre, Apellido, Dirección, Localidad, Provincia y Código Postal).";
+                    lblError.Visible = true;
+                    return;
+                }
+
+                // 2. Validar stock disponible actualizado en base de datos antes de grabar
+                ArticuloNegocio artNegocio = new ArticuloNegocio();
+                var catalogoActual = artNegocio.Listar();
+
+                foreach (var item in carrito.Items)
+                {
+                    var artDB = catalogoActual.Find(x => x.Id == item.Producto.Id);
+                    if (artDB == null || artDB.Stock < item.Cantidad)
+                    {
+                        int disponible = artDB != null ? artDB.Stock : 0;
+                        lblError.Text = $"No hay stock suficiente para '{item.Producto.Nombre}'. Disponible actual: {disponible}.";
+                        lblError.Visible = true;
+                        return;
+                    }
+                }
 
                 int idCliente = 0;
 
@@ -112,7 +149,7 @@ namespace TPC_E_commerce_grupo_i
 
                     idCliente = dirNegocio.ObtenerOCrearCliente(userLogueado, txtNombre.Text.Trim(), txtApellido.Text.Trim());
                     if (chkGuardarDireccion.Checked)
-                    { 
+                    {
                         Direccion dir = new Direccion();
                         dir.Id = ViewState["IdDireccionGuardada"] != null ? (int)ViewState["IdDireccionGuardada"] : 0;
                         dir.Calle = txtDireccion.Text.Trim();
@@ -133,52 +170,43 @@ namespace TPC_E_commerce_grupo_i
                         Session["usuario"] = userLogueado;
                     }
                 }
-                // 1. OBTENEMOS EL TOTAL Y VEMOS QUÉ MEDIO DE PAGO ELIGIÓ
-                decimal totalFinal = carrito.Total;
-                int idFormaPago = 2; // Por defecto Tarjeta
 
+                // 3. Total y medio de pago
+                decimal totalFinal = carrito.Total;
+                int idFormaPago = rbTransferencia.Checked ? 1 : 2;
                 if (rbTransferencia.Checked)
                 {
-                    idFormaPago = 1; // ID 1 en tu SQL ('Efectivo / Transferencia')
-                    totalFinal = totalFinal * 0.90m; // ¡Descuento del 10%!
-                }
-                else if (rbTarjeta.Checked)
-                {
-                    idFormaPago = 2; // ID 2 en tu SQL ('Tarjeta de Crédito / Débito')
+                    totalFinal = totalFinal * 0.90m;
                 }
 
-                // 2. ARMAMOS EL OBJETO PEDIDO PARA GUARDARLO EN LA BASE DE DATOS
+                // 4. Armar y guardar pedido
                 dominio.Pedido nuevoPedido = new dominio.Pedido();
                 nuevoPedido.Cliente = new dominio.Cliente { Id = idCliente };
                 nuevoPedido.Fecha = DateTime.Now;
                 nuevoPedido.Estado = "Pendiente";
-                nuevoPedido.Total = totalFinal; // Ya viene con el descuento aplicado si fue transferencia
-
+                nuevoPedido.Total = totalFinal;
                 nuevoPedido.FormaPago = new dominio.FormaPago { Id = idFormaPago };
-                nuevoPedido.FormaEntrega = new dominio.FormaEntrega { Id = 1 }; // Envío a domicilio por defecto
+                nuevoPedido.FormaEntrega = new dominio.FormaEntrega { Id = 1 };
 
-                // 3. CARGAMOS LOS ÍTEMS DEL CARRITO AL PEDIDO (Usando 'Elementos' como pide tu clase Pedido)
                 foreach (var itemCarrito in carrito.Items)
                 {
                     dominio.ItemPedido itemPedido = new dominio.ItemPedido();
-                    itemPedido.Producto = itemCarrito.Producto; // Usando 'Producto' de tu ItemCarrito
+                    itemPedido.Producto = itemCarrito.Producto;
                     itemPedido.Cantidad = itemCarrito.Cantidad;
                     itemPedido.PrecioUnitario = itemCarrito.Producto.Precio;
-
                     nuevoPedido.Elementos.Add(itemPedido);
                 }
 
-                // 4. GUARDAMOS EL PEDIDO MEDIANTE EL NEGOCIO
                 PedidoNegocio pedidoNegocio = new PedidoNegocio();
                 pedidoNegocio.Agregar(nuevoPedido);
 
-                // 5. VACIAR CARRITO Y REDIRIGIR
                 Session.Remove("Carrito");
                 Response.Redirect("Confirmacion.aspx", false);
             }
             catch (Exception ex)
             {
-                throw ex;
+                Session.Add("error", ex.ToString());
+                Response.Redirect("Error.aspx", false);
             }
         }
         // Método para recalcular el subtotal y total según el medio de pago elegido

@@ -9,6 +9,7 @@
                     <h4>Crear Cuenta Nueva</h4>
                 </div>
                 <div class="card-body">
+                    <asp:Label ID="lblError" runat="server" CssClass="alert alert-danger d-block mb-3" Visible="false" />
                     <!-- Campo Email -->
                     <div class="mb-3">
                         <label for="txtEmail" class="form-label">Correo Electrónico</label>

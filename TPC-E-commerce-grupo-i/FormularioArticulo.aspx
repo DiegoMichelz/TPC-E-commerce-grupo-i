@@ -15,6 +15,7 @@
                     </div>
                     <div class="card-body p-4">
                         <asp:HiddenField ID="hfIdArticulo" runat="server" Value="0" />
+                        <asp:Label ID="lblError" runat="server" CssClass="alert alert-danger d-block mb-3" Visible="false" />
 
                         <div class="row g-3">
                             <div class="col-md-4">

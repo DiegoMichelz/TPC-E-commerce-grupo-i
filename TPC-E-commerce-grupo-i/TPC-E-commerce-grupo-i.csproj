@@ -261,6 +261,7 @@
     <Compile Include="UsuarioAdmin.aspx.designer.cs">
       <DependentUpon>UsuarioAdmin.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Validacion.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="MasterE-commerce.Master" />

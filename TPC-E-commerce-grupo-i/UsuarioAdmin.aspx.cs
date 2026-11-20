@@ -46,6 +46,12 @@ namespace TPC_E_commerce_grupo_i
 
             int idUsuario = Convert.ToInt32(e.CommandArgument);
 
+            Usuario logueado = Session["usuario"] as Usuario;
+            if (logueado != null && logueado.Id == idUsuario && (e.CommandName == "Inactivar" || e.CommandName == "ToggleAdmin"))
+            {
+                return; // Evita que el admin se bloquee o se quite permisos a sí mismo
+            }
+
             if (e.CommandName == "VerDetalle")
             {
                 pnlConfirmarBloqueo.Visible = false;
