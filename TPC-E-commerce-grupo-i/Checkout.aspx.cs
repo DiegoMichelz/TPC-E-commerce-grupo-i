@@ -18,6 +18,7 @@ namespace TPC_E_commerce_grupo_i
 
                     if (carrito.Items != null && carrito.Items.Count > 0)
                     {
+                        ActualizarTotales();
                         lblSubtotal.Text = carrito.Total.ToString("N2");
                         lblTotal.Text = carrito.Total.ToString("N2");
                     }
@@ -172,7 +173,7 @@ namespace TPC_E_commerce_grupo_i
                 }
 
                 // 3. Total y medio de pago
-                decimal totalFinal = carrito.Total;
+                decimal totalFinal = carrito.TotalConEnvio;
                 int idFormaPago = rbTransferencia.Checked ? 1 : 2;
                 if (rbTransferencia.Checked)
                 {
@@ -215,15 +216,28 @@ namespace TPC_E_commerce_grupo_i
             if (Session["Carrito"] != null)
             {
                 dominio.Carrito carrito = (dominio.Carrito)Session["Carrito"];
-                decimal totalFinal = carrito.Total;
 
-                // Si eligió transferencia, aplicamos el 10% de descuento
+                lblSubtotal.Text = carrito.Total.ToString("N2");
+
+                if (carrito.CostoEnvio == 0m)
+                {
+                    lblEnvioCheckout.Text = "GRATIS";
+                    lblEnvioCheckout.CssClass = "text-success fw-semibold";
+                }
+                else
+                {
+                    lblEnvioCheckout.Text = "$" + carrito.CostoEnvio.ToString("N2");
+                    lblEnvioCheckout.CssClass = "fw-semibold text-dark";
+                }
+
+                decimal totalFinal = carrito.TotalConEnvio;
+
+                // 10% de descuento por transferencia sobre toda la operación (productos + envío)
                 if (rbTransferencia.Checked)
                 {
                     totalFinal = totalFinal * 0.90m;
                 }
 
-                lblSubtotal.Text = carrito.Total.ToString("N2");
                 lblTotal.Text = totalFinal.ToString("N2");
             }
         }

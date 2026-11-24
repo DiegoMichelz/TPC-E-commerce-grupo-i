@@ -87,7 +87,7 @@
                         <!-- Opción Tarjeta (ID 2 en tu base) -->
                         <div class="form-check border p-3 rounded-3">
                             <asp:RadioButton ID="rbTarjeta" runat="server" GroupName="MedioPago" Checked="true" AutoPostBack="true" OnCheckedChanged="MedioPago_CheckedChanged" CssClass="form-check-input" />
-                            <label class="form-check-label fw-semibold text-dark ms-2" for="MainContent_rbTarjeta">
+                            <label class="form-check-label fw-semibold text-dark ms-2" for="<%= rbTarjeta.ClientID %>">
                                 Tarjeta de Crédito o Débito
            
                                 <span class="d-block text-muted small fw-normal">Hasta 6 cuotas sin interés con bancos seleccionados.</span>
@@ -97,7 +97,7 @@
                         <!-- Opción Transferencia (ID 1 en tu base, con 10% de descuento) -->
                         <div class="form-check border p-3 rounded-3">
                             <asp:RadioButton ID="rbTransferencia" runat="server" GroupName="MedioPago" AutoPostBack="true" OnCheckedChanged="MedioPago_CheckedChanged" CssClass="form-check-input" />
-                            <label class="form-check-label fw-semibold text-dark ms-2" for="MainContent_rbTransferencia">
+                            <label class="form-check-label fw-semibold text-dark ms-2" for="<%= rbTransferencia.ClientID %>">
                                 Transferencia Bancaria / Efectivo
            
                                 <span class="d-block text-success small fw-semibold">¡10% de descuento abonando por este medio!</span>
@@ -126,7 +126,7 @@
                     </div>
                     <div class="d-flex justify-content-between mb-2 text-muted small">
                         <span>Envío a domicilio</span>
-                        <span class="text-success fw-semibold">GRATIS</span>
+                        <asp:Label ID="lblEnvioCheckout" runat="server" CssClass="text-success fw-semibold" Text="GRATIS" />
                     </div>
 
                     <hr class="my-3">

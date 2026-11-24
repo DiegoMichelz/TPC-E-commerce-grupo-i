@@ -15,7 +15,7 @@ namespace negocio
             {
                 string consulta = @"
                     SELECT 
-                        A.Id, A.Codigo, A.Nombre, A.Descripcion, A.Precio, A.Activo,
+                        A.Id, A.Codigo, A.Nombre, A.Descripcion, A.Precio, A.Stock, A.Activo,
                         M.Id AS IdMarca, M.Descripcion AS Marca,
                         C.Id AS IdCategoria, C.Descripcion AS Categoria
                     FROM Articulos A
@@ -37,6 +37,7 @@ namespace negocio
                     aux.Nombre = (string)datos.Lector["Nombre"];
                     aux.Descripcion = !(datos.Lector["Descripcion"] is DBNull) ? (string)datos.Lector["Descripcion"] : "";
                     aux.Precio = (decimal)datos.Lector["Precio"];
+                    aux.Stock = !(datos.Lector["Stock"] is DBNull) ? (int)datos.Lector["Stock"] : 0;    
                     aux.Activo = (bool)datos.Lector["Activo"];
                     // Cargar Marca
                     if (!(datos.Lector["IdMarca"] is DBNull))

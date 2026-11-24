@@ -20,20 +20,39 @@ namespace TPC_E_commerce_grupo_i
         {
             if (Session["Carrito"] != null)
             {
-                // ✅ Casteo directo a la clase Carrito del proyecto 'dominio'
                 dominio.Carrito carrito = (dominio.Carrito)Session["Carrito"];
 
                 repCarrito.DataSource = carrito.Items;
                 repCarrito.DataBind();
 
                 lblTotalGeneral.Text = carrito.Total.ToString("N2");
-                lblTotalGeneralDos.Text = carrito.Total.ToString("N2");
+
+                if (carrito.Items.Count == 0)
+                {
+                    lblEnvio.Text = "$0,00";
+                    lblEnvio.CssClass = "text-muted fw-semibold";
+                    lblTotalGeneralDos.Text = "0.00";
+                }
+                else if (carrito.CostoEnvio == 0m)
+                {
+                    lblEnvio.Text = "GRATIS";
+                    lblEnvio.CssClass = "text-success fw-semibold";
+                    lblTotalGeneralDos.Text = carrito.TotalConEnvio.ToString("N2");
+                }
+                else
+                {
+                    lblEnvio.Text = "$" + carrito.CostoEnvio.ToString("N2");
+                    lblEnvio.CssClass = "fw-semibold text-dark";
+                    lblTotalGeneralDos.Text = carrito.TotalConEnvio.ToString("N2");
+                }
             }
             else
             {
                 repCarrito.DataSource = null;
                 repCarrito.DataBind();
                 lblTotalGeneral.Text = "0.00";
+                lblEnvio.Text = "$0,00";
+                lblEnvio.CssClass = "text-muted fw-semibold";
                 lblTotalGeneralDos.Text = "0.00";
             }
         }

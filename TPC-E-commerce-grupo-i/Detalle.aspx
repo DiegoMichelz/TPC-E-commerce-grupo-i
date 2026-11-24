@@ -21,7 +21,7 @@
             <!-- Columna Izquierda: Galería de Imágenes -->
             <div class="col-lg-6">
                 <div class="position-relative bg-light rounded-3 overflow-hidden border mb-3 text-center p-3">
-                    <span class="position-absolute top-0 start-0 m-3 badge bg-primary">Envío Gratis</span>
+                    <asp:Label ID="lblEnvioGratisBadge" runat="server" CssClass="position-absolute top-0 start-0 m-3 badge bg-primary" Text="Envío Gratis" />
                     <asp:Image ID="imgPrincipal" runat="server" CssClass="img-fluid rounded" Style="max-height: 380px; object-fit: contain;" ClientIDMode="Static" />
                 </div>
                 <!-- Miniaturas de galería dinámicas con Repeater -->
@@ -46,7 +46,7 @@
                         <span class="text-muted text-uppercase small fw-bold" style="letter-spacing: 0.05em;">Código:
                             <asp:Label ID="lblCodigo" runat="server" />
                         </span>
-                        <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">Stock Disponible</span>
+                        <asp:Label ID="lblStockBadge" runat="server" CssClass="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25" />
                     </div>
 
                     <h1 class="h3 fw-bold text-dark mb-2">

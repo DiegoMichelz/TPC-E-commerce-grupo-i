@@ -15,6 +15,15 @@ namespace TPC_E_commerce_grupo_i
     {
 
         /// <summary>
+        /// Control lblEnvioGratisBadge.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblEnvioGratisBadge;
+
+        /// <summary>
         /// Control imgPrincipal.
         /// </summary>
         /// <remarks>
@@ -40,6 +49,15 @@ namespace TPC_E_commerce_grupo_i
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Label lblCodigo;
+
+        /// <summary>
+        /// Control lblStockBadge.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblStockBadge;
 
         /// <summary>
         /// Control lblNombre.

@@ -31,17 +31,40 @@ namespace TPC_E_commerce_grupo_i
                         lblPrecio.Text = seleccionado.Precio.ToString("N2");
                         lblDescripcion.Text = seleccionado.Descripcion;
 
-                        // 1. Mapear Marca y Categoría en el label correspondiente de la tabla de especificaciones
+                        // 1. Control visual y bloqueo según Stock disponible
+                        if (seleccionado.Stock <= 0)
+                        {
+                            lblStockBadge.Text = "Sin stock disponible";
+                            lblStockBadge.CssClass = "badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25";
+
+                            btnAgregarCarrito.Enabled = false;
+                            btnAgregarCarrito.Text = "Sin Stock";
+                            btnAgregarCarrito.CssClass = "btn btn-secondary btn-lg py-3 fw-bold shadow-sm w-100";
+
+                            btnComprarAhora.Visible = false;
+                        }
+                        else if (seleccionado.Stock <= 5)
+                        {
+                            lblStockBadge.Text = $"¡Últimas {seleccionado.Stock} unidades disponibles!";
+                            lblStockBadge.CssClass = "badge bg-warning bg-opacity-25 text-dark border border-warning";
+                        }
+                        else
+                        {
+                            lblStockBadge.Text = $"Stock disponible: {seleccionado.Stock} unidades";
+                            lblStockBadge.CssClass = "badge bg-success bg-opacity-10 text-success border border-success border-opacity-25";
+                        }
+
+                        // 2. Mapear Marca y Categoría
                         string nombreMarca = seleccionado.Marca != null ? seleccionado.Marca.Descripcion : "Sin Marca";
                         string nombreCategoria = seleccionado.Categoria != null ? seleccionado.Categoria.Descripcion : "Sin Categoría";
                         lblMarcaCategoria.Text = $"{nombreMarca} / {nombreCategoria}";
 
-                        // 2. Mapear Descripción Ampliada en la tabla de especificaciones
+                        // 3. Mapear Descripción Ampliada
                         lblDetalleTecnico.Text = !string.IsNullOrWhiteSpace(seleccionado.Descripcion)
                             ? seleccionado.Descripcion
                             : "No hay especificaciones adicionales registradas para este producto.";
 
-                        // 3. Mapear Imágenes
+                        // 4. Mapear Imágenes
                         if (seleccionado.ImagenesUrl != null && seleccionado.ImagenesUrl.Count > 0)
                         {
                             imgPrincipal.ImageUrl = seleccionado.ImagenesUrl[0];
@@ -59,24 +82,33 @@ namespace TPC_E_commerce_grupo_i
             if (idStr != null)
             {
                 int id = int.Parse(idStr);
-
-                // Usamos la capa de negocio
                 ArticuloNegocio negocio = new ArticuloNegocio();
-
-                // 1. Instancia del objeto Articulo pertenecientes al dominio
                 dominio.Articulo seleccionado = negocio.Listar().Find(x => x.Id == id);
 
                 if (seleccionado != null)
                 {
-                    // 2. Obtener o instanciar el Carrito de la Sesión garantizando el tipo dominio.Carrito
+                    // Validación de seguridad en servidor por si no hay stock
+                    if (seleccionado.Stock <= 0)
+                    {
+                        return;
+                    }
+
                     dominio.Carrito carrito = Session["Carrito"] != null
                         ? (dominio.Carrito)Session["Carrito"]
                         : new dominio.Carrito();
 
-                    // 3. Invocamos AgregarItem pasando la instancia del tipo dominio.Articulo
-                    carrito.AgregarItem(seleccionado, 1);
+                    // Opcional: evitar agregar más unidades al carrito de las que existen en stock
+                    var itemExistente = carrito.Items.Find(x => x.Producto.Id == seleccionado.Id);
+                    int cantidadEnCarrito = itemExistente != null ? itemExistente.Cantidad : 0;
 
-                    // 4. Guardar en Session y redirigir
+                    if (cantidadEnCarrito + 1 > seleccionado.Stock)
+                    {
+                        lblStockBadge.Text = $"Máximo disponible alcanzado ({seleccionado.Stock} unid.)";
+                        lblStockBadge.CssClass = "badge bg-warning bg-opacity-25 text-dark border border-warning";
+                        return;
+                    }
+
+                    carrito.AgregarItem(seleccionado, 1);
                     Session["Carrito"] = carrito;
                     Response.Redirect("Carrito.aspx", false);
                 }

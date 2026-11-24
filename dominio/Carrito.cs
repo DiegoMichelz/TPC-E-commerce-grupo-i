@@ -26,18 +26,29 @@ namespace dominio
 
         public void AgregarItem(Articulo articulo, int cantidad = 1)
         {
+            if (articulo == null || articulo.Stock <= 0)
+                return;
+
             var itemExistente = Items.FirstOrDefault(x => x.Producto.Id == articulo.Id);
 
             if (itemExistente != null)
             {
-                itemExistente.Cantidad += cantidad;
+                if (itemExistente.Cantidad + cantidad <= articulo.Stock)
+                {
+                    itemExistente.Cantidad += cantidad;
+                }
+                else
+                {
+                    itemExistente.Cantidad = articulo.Stock;
+                }
             }
             else
             {
+                int cantidadInicial = cantidad <= articulo.Stock ? cantidad : articulo.Stock;
                 Items.Add(new ItemCarrito
                 {
                     Producto = articulo,
-                    Cantidad = cantidad
+                    Cantidad = cantidadInicial
                 });
             }
         }
@@ -57,15 +68,37 @@ namespace dominio
             if (item != null)
             {
                 if (nuevaCantidad > 0)
-                    item.Cantidad = nuevaCantidad;
+                {
+                    // No permite superar el stock disponible del producto
+                    item.Cantidad = nuevaCantidad <= item.Producto.Stock ? nuevaCantidad : item.Producto.Stock;
+                }
                 else
+                {
                     Items.Remove(item);
+                }
             }
         }
 
         public void Limpiar()
         {
             Items.Clear();
+        }
+
+        public decimal CostoEnvio
+        {
+            get
+            {
+                if (Items.Count == 0) return 0m;
+                return Total >= 50000m ? 0m : 12500m;
+            }
+        }
+
+        public decimal TotalConEnvio
+        {
+            get
+            {
+                return Total + CostoEnvio;
+            }
         }
     }
 }

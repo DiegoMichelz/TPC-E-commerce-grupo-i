@@ -80,7 +80,7 @@
                     </div>
                     <div class="d-flex justify-content-between mb-2 text-muted small">
                         <span>Envío a domicilio</span>
-                        <span class="text-success fw-semibold">GRATIS</span>
+                        <asp:Label ID="lblEnvio" runat="server" CssClass="text-success fw-semibold" Text="GRATIS" />
                     </div>
 
                     <hr class="my-3">
