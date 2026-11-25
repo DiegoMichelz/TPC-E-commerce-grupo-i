@@ -29,5 +29,13 @@ namespace dominio
             Admin = admin;
             Activo = true;
         }
+
+        public bool EsAdminMaestro
+        {
+            get
+            {
+                return this.Admin && this.Id == 1;
+            }
+        }
     }
 }

@@ -77,7 +77,7 @@
                 <div class="card shadow-sm">
                     <div class="card-body">
                         <asp:GridView ID="dgvUsuarios" runat="server" CssClass="table table-striped table-hover align-middle" AutoGenerateColumns="false"
-                            DataKeyNames="Id" OnRowCommand="dgvUsuarios_RowCommand">
+                            DataKeyNames="Id" OnRowCommand="dgvUsuarios_RowCommand" OnRowDataBound="dgvUsuarios_RowDataBound">
                             <Columns>
                                 <asp:BoundField HeaderText="ID" DataField="Id" />
                                 <asp:BoundField HeaderText="Nombre" DataField="Nombre" />
@@ -86,7 +86,8 @@
                                 
                                 <asp:TemplateField HeaderText="Rol">
                                     <ItemTemplate>
-                                        <%# (bool)Eval("Admin") ? "<span class='badge bg-primary'>Administrador</span>" : "<span class='badge bg-secondary'>Comprador</span>" %>
+                                       <%# (bool)Eval("EsAdminMaestro") ? "<span class='badge bg-dark text-warning border border-warning'>👑 Admin Maestro</span>" 
+                                       : ((bool)Eval("Admin") ? "<span class='badge bg-primary'>Administrador</span>" : "<span class='badge bg-secondary'>Comprador</span>") %>
                                     </ItemTemplate>
                                 </asp:TemplateField>
 

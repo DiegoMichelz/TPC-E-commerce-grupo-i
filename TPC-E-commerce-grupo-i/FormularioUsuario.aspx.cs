@@ -39,6 +39,27 @@ namespace TPC_E_commerce_grupo_i
                 int idParam;
                 if (Request.QueryString["id"] != null && int.TryParse(Request.QueryString["id"], out idParam) && idParam > 0)
                 {
+                    UsuarioNegocio usuarioNegocio = new UsuarioNegocio();
+                    Usuario userDestino = usuarioNegocio.Listar("TODOS").Find(u => u.Id == idParam);
+                    if (userDestino == null)
+                    {
+                        Response.Redirect("UsuarioAdmin.aspx", false);
+                        return;
+                    }
+
+                    // Si el destino es Admin Maestro y quien está logueado NO es Admin Maestro -> fuera
+                    if (userDestino.EsAdminMaestro && !adminActual.EsAdminMaestro)
+                    {
+                        Response.Redirect("UsuarioAdmin.aspx", false);
+                        return;
+                    }
+
+                    // Si quien está logueado NO es Admin Maestro y el destino es otro Admin -> fuera
+                    if (!adminActual.EsAdminMaestro && userDestino.Admin)
+                    {
+                        Response.Redirect("UsuarioAdmin.aspx", false);
+                        return;
+                    }
                     IdUsuarioEditar = idParam;
                     lblTitulo.Text = "Modificar Usuario #" + idParam;
                     lblPassAsterisco.Visible = false;
@@ -164,7 +185,32 @@ namespace TPC_E_commerce_grupo_i
                 MostrarError("No podés desactivar tu propia cuenta ni quitarte el rol de Administrador.");
                 return;
             }
+            if (IdUsuarioEditar > 0 && adminLogueado != null)
+            {
+                UsuarioNegocio usuarioNegocioValidacion = new UsuarioNegocio();
+                Usuario destinoActual = usuarioNegocioValidacion.Listar("TODOS").Find(u => u.Id == IdUsuarioEditar);
 
+                if (destinoActual != null)
+                {
+                    if (destinoActual.EsAdminMaestro && !adminLogueado.EsAdminMaestro)
+                    {
+                        MostrarError("Solo el Admin Maestro puede modificar esta cuenta.");
+                        return;
+                    }
+
+                    if (!adminLogueado.EsAdminMaestro && destinoActual.Admin)
+                    {
+                        MostrarError("No tenés permisos para modificar a otro administrador.");
+                        return;
+                    }
+
+                    if (destinoActual.EsAdminMaestro && (!esAdmin || !activo))
+                    {
+                        MostrarError("La cuenta del Admin Maestro no puede desactivarse ni perder su rol.");
+                        return;
+                    }
+                }
+            }
             if (!esAdmin)
             {
                 if (Validacion.EstaVacio(txtNombre) || Validacion.EstaVacio(txtApellido))
@@ -261,7 +307,14 @@ namespace TPC_E_commerce_grupo_i
                         GuardarClienteYDireccion(editado, nombre, apellido, telefono, activo);
                     }
                 }
-
+                if (adminLogueado != null && adminLogueado.Id == IdUsuarioEditar)
+                {
+                    Usuario actualizado = usuarioNegocio.Listar("TODOS").Find(u => u.Id == IdUsuarioEditar);
+                    if (actualizado != null)
+                    {
+                        Session["usuario"] = actualizado;
+                    }
+                }
                 Response.Redirect("UsuarioAdmin.aspx", false);
             }
             catch (Exception ex)

@@ -42,14 +42,23 @@ namespace TPC_E_commerce_grupo_i
 
         protected void dgvUsuarios_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            if (e.CommandArgument == null) return;
-
             int idUsuario = Convert.ToInt32(e.CommandArgument);
-
             Usuario logueado = Session["usuario"] as Usuario;
-            if (logueado != null && logueado.Id == idUsuario && (e.CommandName == "Inactivar" || e.CommandName == "ToggleAdmin"))
+
+            UsuarioNegocio negocio = new UsuarioNegocio();
+            Usuario seleccionado = negocio.Listar("TODOS").Find(u => u.Id == idUsuario);
+            if (seleccionado == null) return;
+
+            if (seleccionado.EsAdminMaestro && (e.CommandName == "Inactivar" || e.CommandName == "ToggleAdmin"))
+                return;
+
+            if (logueado != null && logueado.Id == seleccionado.Id && (e.CommandName == "Inactivar" || e.CommandName == "ToggleAdmin"))
+                return;
+
+            if (logueado != null && !logueado.EsAdminMaestro && seleccionado.Admin)
             {
-                return; // Evita que el admin se bloquee o se quite permisos a sí mismo
+                if (e.CommandName == "Modificar" || e.CommandName == "Inactivar" || e.CommandName == "Reactivar" || e.CommandName == "ToggleAdmin")
+                    return;
             }
 
             if (e.CommandName == "VerDetalle")
@@ -65,14 +74,14 @@ namespace TPC_E_commerce_grupo_i
                 return;
             }
 
-            UsuarioNegocio negocio = new UsuarioNegocio();
+            negocio = new UsuarioNegocio();
 
             if (e.CommandName == "Inactivar")
             {
                 pnlDetalleUsuario.Visible = false;
                 ViewState["IdUsuarioBloquear"] = idUsuario;
 
-                Usuario seleccionado = negocio.Listar("TODOS").Find(u => u.Id == idUsuario);
+                seleccionado = negocio.Listar("TODOS").Find(u => u.Id == idUsuario);
                 lblUsuarioBloquear.Text = seleccionado != null ? seleccionado.Email : ("ID #" + idUsuario);
 
                 pnlConfirmarBloqueo.Visible = true;
@@ -87,7 +96,7 @@ namespace TPC_E_commerce_grupo_i
             {
                 pnlConfirmarBloqueo.Visible = false;
                 List<Usuario> lista = negocio.Listar("TODOS");
-                Usuario seleccionado = lista.Find(u => u.Id == idUsuario);
+                seleccionado = lista.Find(u => u.Id == idUsuario);
                 if (seleccionado != null)
                 {
                     negocio.CambiarRol(idUsuario, !seleccionado.Admin);
@@ -152,6 +161,49 @@ namespace TPC_E_commerce_grupo_i
         protected void btnCerrarDetalle_Click(object sender, EventArgs e)
         {
             pnlDetalleUsuario.Visible = false;
+        }
+
+        protected void dgvUsuarios_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if (e.Row.RowType != DataControlRowType.DataRow) return;
+
+            Usuario fila = e.Row.DataItem as Usuario;
+            Usuario logueado = Session["usuario"] as Usuario;
+            if (fila == null || logueado == null) return;
+
+            LinkButton btnModificar = e.Row.FindControl("btnModificar") as LinkButton;
+            LinkButton btnToggleAdmin = e.Row.FindControl("btnToggleAdmin") as LinkButton;
+            LinkButton btnInactivar = e.Row.FindControl("btnInactivar") as LinkButton;
+            LinkButton btnReactivar = e.Row.FindControl("btnReactivar") as LinkButton;
+
+            bool esMismoUsuario = fila.Id == logueado.Id;
+
+            // 1. El Admin Maestro es intocable: nadie puede quitarle rol ni bloquearlo
+            if (fila.EsAdminMaestro)
+            {
+                if (btnToggleAdmin != null) btnToggleAdmin.Visible = false;
+                if (btnInactivar != null) btnInactivar.Visible = false;
+                if (btnReactivar != null) btnReactivar.Visible = false;
+                // Solo el propio Admin Maestro puede ver su botón Modificar
+                if (btnModificar != null && !logueado.EsAdminMaestro) btnModificar.Visible = false;
+                return;
+            }
+
+            // 2. Nadie puede bloquearse ni quitarse admin a sí mismo
+            if (esMismoUsuario)
+            {
+                if (btnToggleAdmin != null) btnToggleAdmin.Visible = false;
+                if (btnInactivar != null) btnInactivar.Visible = false;
+            }
+
+            // 3. Un admin secundario NO puede modificar, bloquear ni cambiar rol a otros admins
+            if (!logueado.EsAdminMaestro && fila.Admin)
+            {
+                if (btnModificar != null) btnModificar.Visible = false;
+                if (btnToggleAdmin != null) btnToggleAdmin.Visible = false;
+                if (btnInactivar != null) btnInactivar.Visible = false;
+                if (btnReactivar != null) btnReactivar.Visible = false;
+            }
         }
     }
 }
