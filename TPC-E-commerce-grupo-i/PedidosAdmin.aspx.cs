@@ -22,10 +22,23 @@ namespace TPC_E_commerce_grupo_i
             }
         }
 
+        protected void ddlFiltroEstado_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CargarPedidos();
+        }
+
         private void CargarPedidos()
         {
             PedidoNegocio negocio = new PedidoNegocio();
-            gvPedidosAdmin.DataSource = negocio.ListarTodos();
+            var lista = negocio.ListarTodos();
+
+            string estadoSeleccionado = ddlFiltroEstado != null ? ddlFiltroEstado.SelectedValue : "Todos";
+            if (!string.IsNullOrEmpty(estadoSeleccionado) && estadoSeleccionado != "Todos")
+            {
+                lista = lista.FindAll(p => string.Equals(p.Estado, estadoSeleccionado, StringComparison.OrdinalIgnoreCase));
+            }
+
+            gvPedidosAdmin.DataSource = lista;
             gvPedidosAdmin.DataBind();
 
             // Seteamos el valor actual del DropDownList en cada fila según la base de datos
@@ -35,7 +48,7 @@ namespace TPC_E_commerce_grupo_i
                 {
                     DropDownList ddl = (DropDownList)row.FindControl("ddlEstado");
                     HiddenField hdn = (HiddenField)row.FindControl("hdnEstadoActual");
-                    if (ddl != null && hdn != null)
+                    if (ddl != null && hdn != null && ddl.Items.FindByValue(hdn.Value) != null)
                     {
                         ddl.SelectedValue = hdn.Value;
                     }

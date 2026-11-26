@@ -23,6 +23,19 @@
             <div class="col-12">
                 <div class="card shadow-sm">
                     <div class="card-body">
+                        <div class="d-flex justify-content-end align-items-center gap-2 mb-3">
+                            <label for="<%= ddlFiltroEstado.ClientID %>" class="form-label small fw-bold text-muted mb-0">Estado:</label>
+                            <asp:DropDownList ID="ddlFiltroEstado" runat="server" CssClass="form-select form-select-sm w-auto"
+                                AutoPostBack="true" OnSelectedIndexChanged="ddlFiltroEstado_SelectedIndexChanged">
+                                <asp:ListItem Text="Todos" Value="Todos" Selected="True" />
+                                <asp:ListItem Text="Pendiente" Value="Pendiente" />
+                                <asp:ListItem Text="En preparación" Value="En preparación" />
+                                <asp:ListItem Text="En camino" Value="En camino" />
+                                <asp:ListItem Text="Entregado" Value="Entregado" />
+                                <asp:ListItem Text="Cancelado" Value="Cancelado" />
+                            </asp:DropDownList>
+                        </div>
+
                         <asp:GridView ID="gvPedidosAdmin" runat="server" CssClass="table table-striped table-hover align-middle" AutoGenerateColumns="False" 
                             DataKeyNames="Id" OnRowCommand="gvPedidosAdmin_RowCommand" EmptyDataText="No hay pedidos registrados.">
                             <Columns>
