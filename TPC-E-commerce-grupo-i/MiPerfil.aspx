@@ -46,6 +46,37 @@
 
                         <hr class="my-4" />
 
+                        <h5 class="fw-bold mb-3 text-dark"><i class="bi bi-geo-alt-fill text-primary me-2"></i>Dirección de Envío</h5>
+
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                <label class="form-label small fw-bold text-muted">Calle y Altura</label>
+                                <asp:TextBox ID="txtCalle" runat="server" CssClass="form-control" Placeholder="Ej: Av. Siempreviva 742"></asp:TextBox>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold text-muted">Piso / Depto (Opcional)</label>
+                                <asp:TextBox ID="txtPisoDepto" runat="server" CssClass="form-control" Placeholder="Ej: 4° B"></asp:TextBox>
+                            </div>
+
+                            <div class="col-md-5">
+                                <label class="form-label small fw-bold text-muted">Localidad</label>
+                                <asp:TextBox ID="txtLocalidad" runat="server" CssClass="form-control" Placeholder="Ej: Palermo"></asp:TextBox>
+                            </div>
+
+                            <div class="col-md-4">
+                                <label class="form-label small fw-bold text-muted">Provincia</label>
+                                <asp:TextBox ID="txtProvincia" runat="server" CssClass="form-control" Placeholder="Ej: CABA"></asp:TextBox>
+                            </div>
+
+                            <div class="col-md-3">
+                                <label class="form-label small fw-bold text-muted">Código Postal</label>
+                                <asp:TextBox ID="txtCP" runat="server" CssClass="form-control" Placeholder="Ej: 1425"></asp:TextBox>
+                            </div>
+                        </div>
+
+                        <hr class="my-4" />
+
                         <div class="d-flex justify-content-between">
                             <a href="Default.aspx" class="btn btn-outline-secondary">Volver al Inicio</a>
                             <asp:Button ID="btnGuardar" runat="server" Text="Guardar Cambios" CssClass="btn btn-primary px-4 fw-bold" OnClick="btnGuardar_Click" />

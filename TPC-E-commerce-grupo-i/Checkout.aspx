@@ -20,12 +20,12 @@
                 <div class="card border shadow-sm rounded-3 p-4 mb-4 bg-white">
                     <h5 class="fw-bold text-dark mb-3"><i class="bi bi-geo-alt text-primary me-2"></i>Dirección de Envío y Facturación</h5>
 
-                    <!-- Cuadrito para usar dirección guardada (Visible solo si el usuario logueado ya guardó una antes) -->
+                    <!-- Selector para usar dirección guardada o ingresar una nueva -->
                     <asp:Panel ID="pnlDireccionGuardada" runat="server" Visible="false" CssClass="alert alert-light border border-primary-subtle bg-light mb-4">
                         <div class="form-check mb-0">
                             <asp:CheckBox ID="chkUsarGuardada" runat="server" AutoPostBack="true" OnCheckedChanged="chkUsarGuardada_CheckedChanged" CssClass="form-check-input" />
                             <label class="form-check-label fw-semibold text-dark ms-1" for="<%= chkUsarGuardada.ClientID %>">
-                                Usar mi dirección guardada
+                                Usar mi dirección guardada (podés editarla en los campos de abajo o destildar para cargar una nueva)
                                 <span class="d-block text-muted small fw-normal">
                                     <asp:Label ID="lblResumenDireccion" runat="server"></asp:Label>
                                 </span>
@@ -67,12 +67,12 @@
                             <asp:TextBox ID="txtCP" runat="server" CssClass="form-control" placeholder="Ej: 7500" required="true" />
                         </div>
 
-                        <!-- Checkbox para guardar datos en futuras compras (Visible solo para usuarios logueados) -->
+                        <!-- Checkbox para guardar/actualizar datos en futuras compras (Visible solo para usuarios logueados) -->
                         <asp:Panel ID="pnlGuardarDireccion" runat="server" Visible="false" CssClass="col-12 mt-3 pt-2 border-top">
                             <div class="form-check">
-                                <asp:CheckBox ID="chkGuardarDireccion" runat="server" CssClass="form-check-input" />
+                                <asp:CheckBox ID="chkGuardarDireccion" runat="server" Checked="true" CssClass="form-check-input" />
                                 <label class="form-check-label small fw-semibold text-secondary ms-1" for="<%= chkGuardarDireccion.ClientID %>">
-                                    Guardar estos datos de envío para futuras compras
+                                    Guardar o actualizar estos datos de envío para futuras compras
                                 </label>
                             </div>
                         </asp:Panel>

@@ -13,7 +13,6 @@ namespace TPC_E_commerce_grupo_i
             {
                 if (Session["Carrito"] != null)
                 {
-                    // ✅ Casteo explícito forzando el uso de la clase del proyecto 'dominio'
                     dominio.Carrito carrito = (dominio.Carrito)Session["Carrito"];
 
                     if (carrito.Items != null && carrito.Items.Count > 0)
@@ -36,10 +35,10 @@ namespace TPC_E_commerce_grupo_i
 
                 if (Session["usuario"] != null)
                 {
-                    // ✅ Aplicamos el mismo casteo de namespace para el usuario
                     dominio.Usuario userLogueado = (dominio.Usuario)Session["usuario"];
 
                     pnlGuardarDireccion.Visible = true;
+                    chkGuardarDireccion.Checked = true;
 
                     txtEmail.Text = userLogueado.Email;
                     txtEmail.ReadOnly = true;
@@ -54,15 +53,51 @@ namespace TPC_E_commerce_grupo_i
                         ViewState["IdDireccionGuardada"] = dirGuardada.Id;
 
                         pnlDireccionGuardada.Visible = true;
-                        string piso = string.IsNullOrWhiteSpace(dirGuardada.Piso) ? "" : $" ({dirGuardada.Piso})";
-                        lblResumenDireccion.Text = $"{dirGuardada.Calle}{piso} - {dirGuardada.Localidad}, {dirGuardada.Provincia} (CP {dirGuardada.CodigoPostal})";
+                        chkUsarGuardada.Checked = true;
+
+                        string pisoDepto = FormatearPisoDepto(dirGuardada);
+                        string pisoResumen = string.IsNullOrWhiteSpace(pisoDepto) ? "" : $" ({pisoDepto})";
+                        lblResumenDireccion.Text = $"{dirGuardada.Calle}{pisoResumen} - {dirGuardada.Localidad}, {dirGuardada.Provincia} (CP {dirGuardada.CodigoPostal})";
+
+                        CargarDireccionEnCampos(dirGuardada);
+                    }
+                    else
+                    {
+                        ViewState["IdDireccionGuardada"] = 0;
                     }
                 }
             }
         }
 
+        private string FormatearPisoDepto(Direccion dir)
+        {
+            if (dir == null) return "";
+            if (!string.IsNullOrWhiteSpace(dir.Piso) && !string.IsNullOrWhiteSpace(dir.Departamento))
+                return $"{dir.Piso} {dir.Departamento}".Trim();
+            if (!string.IsNullOrWhiteSpace(dir.Piso))
+                return dir.Piso.Trim();
+            if (!string.IsNullOrWhiteSpace(dir.Departamento))
+                return dir.Departamento.Trim();
+            return "";
+        }
 
+        private void CargarDireccionEnCampos(Direccion dir)
+        {
+            txtDireccion.Text = dir.Calle;
+            txtPisoDepto.Text = FormatearPisoDepto(dir);
+            txtLocalidad.Text = dir.Localidad;
+            txtProvincia.Text = dir.Provincia;
+            txtCP.Text = dir.CodigoPostal;
+        }
 
+        private void LimpiarCamposDireccion()
+        {
+            txtDireccion.Text = "";
+            txtPisoDepto.Text = "";
+            txtLocalidad.Text = "";
+            txtProvincia.Text = "";
+            txtCP.Text = "";
+        }
 
         protected void chkUsarGuardada_CheckedChanged(object sender, EventArgs e)
         {
@@ -76,22 +111,17 @@ namespace TPC_E_commerce_grupo_i
 
                 if (dirGuardada != null)
                 {
-                    txtDireccion.Text = dirGuardada.Calle;
-                    txtPisoDepto.Text = dirGuardada.Piso;
-                    txtLocalidad.Text = dirGuardada.Localidad;
-                    txtProvincia.Text = dirGuardada.Provincia;
-                    txtCP.Text = dirGuardada.CodigoPostal;
-
-                    chkGuardarDireccion.Checked = false;
+                    ViewState["IdDireccionGuardada"] = dirGuardada.Id;
+                    CargarDireccionEnCampos(dirGuardada);
+                    chkGuardarDireccion.Checked = true;
                 }
             }
             else
             {
-                txtDireccion.Text = "";
-                txtPisoDepto.Text = "";
-                txtLocalidad.Text = "";
-                txtProvincia.Text = "";
-                txtCP.Text = "";
+                // Si destilda la guardada, habilita ingresar una nueva dirección sin sobreescribir la anterior
+                ViewState["IdDireccionGuardada"] = 0;
+                LimpiarCamposDireccion();
+                chkGuardarDireccion.Checked = true;
             }
         }
 
@@ -142,7 +172,8 @@ namespace TPC_E_commerce_grupo_i
                 }
 
                 int idCliente = 0;
-                int idDireccionEnvio = ViewState["IdDireccionGuardada"] != null ? (int)ViewState["IdDireccionGuardada"] : 0;
+                int idDireccionGuardada = ViewState["IdDireccionGuardada"] != null ? (int)ViewState["IdDireccionGuardada"] : 0;
+                int idDireccionEnvio = idDireccionGuardada;
 
                 if (Session["usuario"] != null)
                 {
@@ -151,22 +182,28 @@ namespace TPC_E_commerce_grupo_i
 
                     idCliente = dirNegocio.ObtenerOCrearCliente(userLogueado, txtNombre.Text.Trim(), txtApellido.Text.Trim());
 
-                    if (idDireccionEnvio == 0)
-                    {
-                        Direccion dirExistente = dirNegocio.ObtenerPorEmail(userLogueado.Email);
-                        if (dirExistente != null)
-                        {
-                            idDireccionEnvio = dirExistente.Id;
-                        }
-                    }
-
                     if (chkGuardarDireccion.Checked)
                     {
+                        string pisoDeptoTexto = txtPisoDepto.Text.Trim();
+                        string piso = pisoDeptoTexto;
+                        string depto = "";
+
+                        if (pisoDeptoTexto.Contains(" "))
+                        {
+                            string[] partes = pisoDeptoTexto.Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
+                            if (partes.Length == 2)
+                            {
+                                piso = partes[0];
+                                depto = partes[1];
+                            }
+                        }
+
                         Direccion dir = new Direccion();
-                        dir.Id = idDireccionEnvio;
+                        dir.Id = idDireccionGuardada; // > 0 actualiza la dirección guardada; 0 crea una nueva dirección
                         dir.Calle = txtDireccion.Text.Trim();
                         dir.Numero = "S/N";
-                        dir.Piso = txtPisoDepto.Text.Trim();
+                        dir.Piso = piso;
+                        dir.Departamento = depto;
                         dir.Localidad = txtLocalidad.Text.Trim();
                         dir.Provincia = txtProvincia.Text.Trim();
                         dir.CodigoPostal = txtCP.Text.Trim();
@@ -178,6 +215,14 @@ namespace TPC_E_commerce_grupo_i
                         {
                             idDireccionEnvio = dirActualizada.Id;
                             ViewState["IdDireccionGuardada"] = idDireccionEnvio;
+                        }
+                    }
+                    else if (idDireccionEnvio == 0)
+                    {
+                        Direccion dirExistente = dirNegocio.ObtenerPorEmail(userLogueado.Email);
+                        if (dirExistente != null)
+                        {
+                            idDireccionEnvio = dirExistente.Id;
                         }
                     }
 
@@ -234,7 +279,7 @@ namespace TPC_E_commerce_grupo_i
                 Response.Redirect("Error.aspx", false);
             }
         }
-        // Método para recalcular el subtotal y total según el medio de pago elegido
+
         private void ActualizarTotales()
         {
             if (Session["Carrito"] != null)
@@ -256,7 +301,6 @@ namespace TPC_E_commerce_grupo_i
 
                 decimal totalFinal = carrito.TotalConEnvio;
 
-                // 10% de descuento por transferencia sobre toda la operación (productos + envío)
                 if (rbTransferencia.Checked)
                 {
                     totalFinal = totalFinal * 0.90m;
@@ -266,7 +310,6 @@ namespace TPC_E_commerce_grupo_i
             }
         }
 
-        // El evento que reclama el botón para actualizar la pantalla al instante
         protected void MedioPago_CheckedChanged(object sender, EventArgs e)
         {
             ActualizarTotales();

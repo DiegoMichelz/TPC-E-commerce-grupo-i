@@ -88,20 +88,22 @@ namespace negocio
                 if (dir.Id > 0)
                 {
                     datos.setConsulta(@"UPDATE Direcciones 
-                                        SET Calle = @calle, Numero = @numero, Piso = @piso, CodigoPostal = @cp, Localidad = @localidad, Provincia = @provincia 
+                                        SET Calle = @calle, Numero = @numero, Piso = @piso, Departamento = @departamento, 
+                                            CodigoPostal = @cp, Localidad = @localidad, Provincia = @provincia 
                                         WHERE Id = @id");
                     datos.setParametro("@id", dir.Id);
                 }
                 else
                 {
-                    datos.setConsulta(@"INSERT INTO Direcciones (IdCliente, Calle, Numero, Piso, CodigoPostal, Localidad, Provincia, EsPredeterminada, Activo) 
-                                        VALUES (@idCliente, @calle, @numero, @piso, @cp, @localidad, @provincia, 1, 1)");
+                    datos.setConsulta(@"INSERT INTO Direcciones (IdCliente, Calle, Numero, Piso, Departamento, CodigoPostal, Localidad, Provincia, EsPredeterminada, Activo) 
+                                        VALUES (@idCliente, @calle, @numero, @piso, @departamento, @cp, @localidad, @provincia, 1, 1)");
                     datos.setParametro("@idCliente", idCliente);
                 }
 
                 datos.setParametro("@calle", dir.Calle);
                 datos.setParametro("@numero", string.IsNullOrEmpty(dir.Numero) ? "S/N" : dir.Numero);
                 datos.setParametro("@piso", string.IsNullOrEmpty(dir.Piso) ? (object)DBNull.Value : dir.Piso);
+                datos.setParametro("@departamento", string.IsNullOrEmpty(dir.Departamento) ? (object)DBNull.Value : dir.Departamento);
                 datos.setParametro("@cp", dir.CodigoPostal);
                 datos.setParametro("@localidad", dir.Localidad);
                 datos.setParametro("@provincia", dir.Provincia);
