@@ -49,12 +49,24 @@ namespace TPC_E_commerce_grupo_i
         {
             try
             {
+                pnlMensaje.Visible = false;
+
                 Usuario user = (Usuario)Session["usuario"];
+                string nuevoNombre = txtNombre.Text.Trim();
+                string nuevoApellido = txtApellido.Text.Trim();
+
+                if (string.IsNullOrWhiteSpace(nuevoNombre) || string.IsNullOrWhiteSpace(nuevoApellido))
+                {
+                    pnlMensaje.CssClass = "alert alert-warning alert-dismissible fade show";
+                    lblMensaje.Text = "Completá tu nombre y apellido.";
+                    pnlMensaje.Visible = true;
+                    return;
+                }
+
+                user.Nombre = nuevoNombre;
+                user.Apellido = nuevoApellido;
+
                 UsuarioNegocio negocio = new UsuarioNegocio();
-
-                user.Nombre = txtNombre.Text.Trim();
-                user.Apellido = txtApellido.Text.Trim();
-
                 negocio.Actualizar(user);
                 Session["usuario"] = user;
 

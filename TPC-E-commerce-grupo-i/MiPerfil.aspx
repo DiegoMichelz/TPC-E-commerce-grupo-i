@@ -15,32 +15,22 @@
                             <i class="bi bi-check-circle-fill me-2"></i><asp:Label ID="lblMensaje" runat="server"></asp:Label>
                         </asp:Panel>
 
-                        <div class="row g-4 align-items-center">
-                            <!-- Columna Izquierda: Datos -->
-                            <div class="col-md-7">
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold text-muted">Email (Cuenta)</label>
-                                    <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control bg-light" ReadOnly="true"></asp:TextBox>
-                                </div>
+                        <h5 class="fw-bold mb-3 text-dark"><i class="bi bi-person-badge text-primary me-2"></i>Datos de Cuenta</h5>
 
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold text-muted">Nombre</label>
-                                    <asp:TextBox ID="txtNombre" runat="server" CssClass="form-control" Placeholder="Tu nombre"></asp:TextBox>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold text-muted">Apellido</label>
-                                    <asp:TextBox ID="txtApellido" runat="server" CssClass="form-control" Placeholder="Tu apellido"></asp:TextBox>
-                                </div>
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label small fw-bold text-muted">Correo Electrónico (Cuenta)</label>
+                                <asp:TextBox ID="txtEmail" runat="server" CssClass="form-control bg-light" ReadOnly="true"></asp:TextBox>
                             </div>
 
-                            <!-- Columna Derecha: Avatar Fijo -->
-                            <div class="col-md-5 text-center">
-                                <div class="p-3 border rounded bg-light">
-                                    <asp:Image ID="imgPerfil" runat="server" ImageUrl="https://cdn-icons-png.flaticon.com/512/149/149071.png" 
-                                        CssClass="img-fluid rounded-circle border shadow-sm mb-2" Style="width: 150px; height: 150px; object-fit: cover;" />
-                                    <div class="small text-muted fw-semibold">Avatar de Usuario</div>
-                                </div>
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted">Nombre</label>
+                                <asp:TextBox ID="txtNombre" runat="server" CssClass="form-control" Placeholder="Tu nombre"></asp:TextBox>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold text-muted">Apellido</label>
+                                <asp:TextBox ID="txtApellido" runat="server" CssClass="form-control" Placeholder="Tu apellido"></asp:TextBox>
                             </div>
                         </div>
 
