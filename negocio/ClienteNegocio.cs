@@ -38,15 +38,44 @@ namespace negocio
                 return true;
             }
 
-            // 3. Consulta específica por Email
-            public Cliente BuscarPorEmail(string email)
+        // 3. Consulta específica por Email
+        public Cliente BuscarPorEmail(string email)
+        {
+            AccesoDatos consultaDatos = new AccesoDatos();
+            try
             {
-                // Lógica de búsqueda
-                return new Cliente();
-            }
+                consultaDatos.setConsulta("SELECT Id, Nombre, Apellido, Email, Telefono, Activo FROM Clientes WHERE Email = @email");
+                consultaDatos.setParametro("@email", email);
+                consultaDatos.ejecutarLectura();
 
-            // 4. Baja lógica
-            public void EliminarLogico(int id)
+                if (consultaDatos.Lector.Read())
+                {
+                    Cliente cliente = new Cliente
+                    {
+                        Id = (int)consultaDatos.Lector["Id"],
+                        Nombre = (string)consultaDatos.Lector["Nombre"],
+                        Apellido = (string)consultaDatos.Lector["Apellido"],
+                        Email = (string)consultaDatos.Lector["Email"],
+                        Telefono = consultaDatos.Lector["Telefono"] is DBNull ? null : (string)consultaDatos.Lector["Telefono"],
+                        Activo = (bool)consultaDatos.Lector["Activo"]
+                    };
+                    return cliente;
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                consultaDatos.cerrarConexion();
+            }
+        }
+
+        // 4. Baja lógica
+        public void EliminarLogico(int id)
             {
                 // Lógica para UPDATE Clientes SET Activo = 0 WHERE Id = id
             }

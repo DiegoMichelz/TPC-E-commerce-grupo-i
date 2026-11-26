@@ -7,7 +7,7 @@ using negocio;
 
 namespace TPC_E_commerce_grupo_i
 {
-    public partial class UsuariosAdmin : Page
+    public partial class UsuarioAdmin : Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {

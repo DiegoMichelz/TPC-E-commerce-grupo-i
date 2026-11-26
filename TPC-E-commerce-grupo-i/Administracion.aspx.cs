@@ -30,10 +30,25 @@ namespace TPC_E_commerce_grupo_i
             {
                 // Listamos tanto activos como inactivos para la administración
                 List<Articulo> lista = negocio.Listar(false);
-
                 Session["listaArticulosAdmin"] = lista;
 
-                dgvArticulos.DataSource = lista;
+                string filtro = ddlFiltroEstado != null ? ddlFiltroEstado.SelectedValue : "ACTIVOS";
+                List<Articulo> filtrada;
+
+                if (filtro == "ACTIVOS")
+                {
+                    filtrada = lista.FindAll(x => x.Activo);
+                }
+                else if (filtro == "INACTIVOS")
+                {
+                    filtrada = lista.FindAll(x => !x.Activo);
+                }
+                else
+                {
+                    filtrada = lista;
+                }
+
+                dgvArticulos.DataSource = filtrada;
                 dgvArticulos.DataBind();
             }
             catch (Exception ex)
@@ -41,6 +56,14 @@ namespace TPC_E_commerce_grupo_i
                 Session.Add("error", ex.ToString());
                 Response.Redirect("Error.aspx", false);
             }
+        }
+
+        protected void ddlFiltroEstado_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            pnlConfirmarBaja.Visible = false;
+            ViewState["IdArticuloEliminar"] = null;
+            dgvArticulos.PageIndex = 0;
+            CargarGrilla();
         }
 
         protected void dgvArticulos_SelectedIndexChanged(object sender, EventArgs e)

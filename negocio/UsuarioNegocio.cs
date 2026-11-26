@@ -33,6 +33,12 @@ namespace negocio
                     if (!(datos.Lector["UrlImagenPerfil"] is DBNull))
                         usuario.UrlImagenPerfil = (string)datos.Lector["UrlImagenPerfil"];
 
+                    // ⛔ Si el usuario está inactivo o bloqueado, lanzamos la excepción
+                    if (!usuario.Activo)
+                    {
+                        throw new Exception("Tu cuenta se encuentra inactiva o bloqueada. Contactá con el administrador.");
+                    }
+
                     return true;
                 }
 

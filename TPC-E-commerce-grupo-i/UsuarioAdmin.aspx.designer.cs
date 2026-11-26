@@ -11,7 +11,7 @@ namespace TPC_E_commerce_grupo_i
 {
 
 
-    public partial class UsuariosAdmin
+    public partial class UsuarioAdmin
     {
 
         /// <summary>

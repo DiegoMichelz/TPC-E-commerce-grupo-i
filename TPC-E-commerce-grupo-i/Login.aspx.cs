@@ -38,8 +38,8 @@ namespace TPC_E_commerce_grupo_i
 
             try
             {
-                usuario.Email = txtEmail.Text;
-                usuario.Pass = txtPassword.Text;
+                usuario.Email = txtEmail.Text.Trim();
+                usuario.Pass = txtPassword.Text.Trim();
 
                 // Llamamos al método de login
                 if (negocio.Loguear(usuario))
@@ -47,7 +47,7 @@ namespace TPC_E_commerce_grupo_i
                     // Guardamos el usuario logueado en la Session del sitio
                     Session["usuario"] = usuario;
 
-                    // Redirigimos según el rol (si es admin a la administración, si es cliente al catálogo o carrito)
+                    // Redirigimos según el rol
                     if (usuario.Admin)
                     {
                         Response.Redirect("Administracion.aspx", false);
@@ -59,22 +59,14 @@ namespace TPC_E_commerce_grupo_i
                 }
                 else
                 {
-                    // Si falla, podemos mostrar un mensaje de error (podés sumar un Label en el .aspx para esto)
-                    //Session.Add("error", "Email o contraseña incorrectos.");
-                    //Response.Redirect("Error.aspx", false);
                     lblMensajeError.Text = "Email o contraseña incorrectos.";
                     lblMensajeError.Visible = true;
                 }
             }
             catch (Exception ex)
             {
-                //Session.Add("error", ex.ToString());
-                //Response.Redirect("Error.aspx", false);
-                // Si ocurre cualquier excepción en la base de datos:
-                //lblMensajeError.Text = "Usuario o contraseña incorrectos.";
-                //lblMensajeError.Visible = true;
-
-                lblMensajeError.Text = "Error real: " + ex.Message;
+                // Muestra el mensaje de error (incluyendo si la cuenta está inactiva/bloqueada)
+                lblMensajeError.Text = ex.Message;
                 lblMensajeError.Visible = true;
             }
         }

@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Gestión de Usuarios" Language="C#" MasterPageFile="~/MasterE-commerce.Master" AutoEventWireup="true" CodeBehind="UsuarioAdmin.aspx.cs" Inherits="TPC_E_commerce_grupo_i.UsuariosAdmin" %>
+﻿<%@ Page Title="Gestión de Usuarios" Language="C#" MasterPageFile="~/MasterE-commerce.Master" AutoEventWireup="true" CodeBehind="UsuarioAdmin.aspx.cs" Inherits="TPC_E_commerce_grupo_i.UsuarioAdmin" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="head" runat="server">
 </asp:Content>

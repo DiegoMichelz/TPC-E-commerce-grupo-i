@@ -27,6 +27,17 @@
             <div class="col-12">
                 <div class="card shadow-sm">
                     <div class="card-body">
+                        <!-- Filtro por estado de artículo -->
+                        <div class="d-flex justify-content-end align-items-center gap-2 mb-3">
+                            <label for="<%= ddlFiltroEstado.ClientID %>" class="form-label mb-0 fw-semibold">Estado:</label>
+                            <asp:DropDownList ID="ddlFiltroEstado" runat="server" CssClass="form-select form-select-sm w-auto"
+                                AutoPostBack="true" OnSelectedIndexChanged="ddlFiltroEstado_SelectedIndexChanged">
+                                <asp:ListItem Text="Activos" Value="ACTIVOS" Selected="True" />
+                                <asp:ListItem Text="Inactivos" Value="INACTIVOS" />
+                                <asp:ListItem Text="Todos" Value="TODOS" />
+                            </asp:DropDownList>
+                        </div>
+
                         <!-- Panel de confirmación Bootstrap -->
                         <asp:Panel ID="pnlConfirmarBaja" runat="server" Visible="false" CssClass="alert alert-warning border-warning d-flex justify-content-between align-items-center mb-3">
                             <div>
@@ -47,6 +58,13 @@
                                 <asp:BoundField HeaderText="Código" DataField="Codigo" />
                                 <asp:BoundField HeaderText="Nombre" DataField="Nombre" />
                                 <asp:BoundField HeaderText="Precio" DataField="Precio" DataFormatString="{0:C}" />
+                                <asp:TemplateField HeaderText="Stock" ItemStyle-CssClass="text-center" HeaderStyle-CssClass="text-center">
+                                    <ItemTemplate>
+                                        <span class='<%# Convert.ToInt32(Eval("Stock")) <= 0 ? "badge bg-danger" : (Convert.ToInt32(Eval("Stock")) <= 5 ? "badge bg-warning text-dark" : "badge bg-success") %>'>
+                                            <%# Eval("Stock") %>
+                                        </span>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
                                 <asp:TemplateField HeaderText="Marca">
                                     <ItemTemplate>
                                         <%# Eval("Marca") != null ? Eval("Marca.Descripcion") : "Sin Marca" %>

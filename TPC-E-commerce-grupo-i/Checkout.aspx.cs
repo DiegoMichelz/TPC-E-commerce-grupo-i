@@ -142,6 +142,7 @@ namespace TPC_E_commerce_grupo_i
                 }
 
                 int idCliente = 0;
+                int idDireccionEnvio = ViewState["IdDireccionGuardada"] != null ? (int)ViewState["IdDireccionGuardada"] : 0;
 
                 if (Session["usuario"] != null)
                 {
@@ -149,10 +150,20 @@ namespace TPC_E_commerce_grupo_i
                     DireccionNegocio dirNegocio = new DireccionNegocio();
 
                     idCliente = dirNegocio.ObtenerOCrearCliente(userLogueado, txtNombre.Text.Trim(), txtApellido.Text.Trim());
+
+                    if (idDireccionEnvio == 0)
+                    {
+                        Direccion dirExistente = dirNegocio.ObtenerPorEmail(userLogueado.Email);
+                        if (dirExistente != null)
+                        {
+                            idDireccionEnvio = dirExistente.Id;
+                        }
+                    }
+
                     if (chkGuardarDireccion.Checked)
                     {
                         Direccion dir = new Direccion();
-                        dir.Id = ViewState["IdDireccionGuardada"] != null ? (int)ViewState["IdDireccionGuardada"] : 0;
+                        dir.Id = idDireccionEnvio;
                         dir.Calle = txtDireccion.Text.Trim();
                         dir.Numero = "S/N";
                         dir.Piso = txtPisoDepto.Text.Trim();
@@ -161,7 +172,15 @@ namespace TPC_E_commerce_grupo_i
                         dir.CodigoPostal = txtCP.Text.Trim();
 
                         dirNegocio.GuardarOActualizar(dir, idCliente);
+
+                        Direccion dirActualizada = dirNegocio.ObtenerPorEmail(userLogueado.Email);
+                        if (dirActualizada != null)
+                        {
+                            idDireccionEnvio = dirActualizada.Id;
+                            ViewState["IdDireccionGuardada"] = idDireccionEnvio;
+                        }
                     }
+
                     if (string.IsNullOrWhiteSpace(userLogueado.Nombre) || string.IsNullOrWhiteSpace(userLogueado.Apellido))
                     {
                         userLogueado.Nombre = txtNombre.Text.Trim();
@@ -187,7 +206,12 @@ namespace TPC_E_commerce_grupo_i
                 nuevoPedido.Estado = "Pendiente";
                 nuevoPedido.Total = totalFinal;
                 nuevoPedido.FormaPago = new dominio.FormaPago { Id = idFormaPago };
-                nuevoPedido.FormaEntrega = new dominio.FormaEntrega { Id = 1 };
+                nuevoPedido.FormaEntrega = new dominio.FormaEntrega { Id = 2 };
+
+                if (idDireccionEnvio > 0)
+                {
+                    nuevoPedido.DireccionEnvio = new dominio.Direccion { Id = idDireccionEnvio };
+                }
 
                 foreach (var itemCarrito in carrito.Items)
                 {
